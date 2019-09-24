@@ -151,6 +151,10 @@ export class ScalixFolder {
         return this.#data['folders'];
     }
 
+    get namespace() {
+        return this.#data['ns'];
+    }
+
     compareTo(folder) {
 
         // All special folders first!

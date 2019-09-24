@@ -18,7 +18,12 @@
 
         computed: {
             folders: function () {
-                return this.$store.state.mailbox.folders.sort((a, b) => a.compareTo(b));
+                const _folders = this.$store.state.mailbox.folders;
+                return [
+                    ..._folders.filter(i => i.namespace === 'private').sort((a, b) => a.compareTo(b)),
+                    ..._folders.filter(i => i.namespace === 'others').sort((a, b) => a.compareTo(b)),
+                    ..._folders.filter(i => i.namespace === 'shared').sort((a, b) => a.compareTo(b)),
+                ]
             }
         },
 
