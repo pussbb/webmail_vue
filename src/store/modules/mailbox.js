@@ -2,7 +2,7 @@ import client from '@/_sxapi/'
 
 const state = {
     revision: '',
-    folders: {}
+    folders: []
 }
 
 const getters = {

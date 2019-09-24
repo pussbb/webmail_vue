@@ -1,21 +1,28 @@
 <template>
     <div class="folder-tree-view">
         <ul>
+            <FolderTreeItem v-for="folder in folders" :item="folder"/>
         </ul>
     </div>
 </template>
 
 <script>
 
-    import { mapState } from 'vuex'
+    import FolderTreeItem from "./FolderTreeItem"
 
     export default {
         name: 'FolderTreeView',
-        components: {  },
-        computed: {
-            ... mapState('mailbox', ['folders']),
+        components: {
+            FolderTreeItem
         },
-        mounted () {
+
+        computed: {
+            folders: function () {
+                return this.$store.state.mailbox.folders.sort((a, b) => a.compareTo(b));
+            }
+        },
+
+        created() {
             this.$store.dispatch('mailbox/getFolders')
         }
     }

@@ -1,6 +1,7 @@
 
 import axios from "axios"
 import {UserInfo} from "@/_sxapi/UserInfo";
+import {ScalixFolder} from "@/_sxapi/Folder";
 
 export default class ClientConnection {
 
@@ -46,7 +47,11 @@ export default class ClientConnection {
             }
             this._instance
                 .get(this.#userinfo.mailboxUri, config)
-                .then(resp => resolve(resp.data))
+                .then(resp => {
+                    const revision = resp.data.revision
+                    const folders = resp.data.folders.map((i) =>  new ScalixFolder(i))
+                    resolve({ revision, folders });
+                })
                 .catch(err => reject(err));
         });
     }
