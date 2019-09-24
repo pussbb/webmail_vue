@@ -1,7 +1,7 @@
 <template>
     <div class="folder-tree-view">
         <ul>
-            <FolderTreeItem v-for="folder in folders" :item="folder"/>
+            <FolderTreeItem v-for="(folder, indx) in folders" :key="indx" :item="folder"/>
         </ul>
     </div>
 </template>
