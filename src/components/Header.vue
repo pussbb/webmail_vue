@@ -38,6 +38,7 @@
                         <b-dropdown-item to="/profile"> <font-awesome-icon :icon="faUserCog" /> Profile</b-dropdown-item>
                         <b-dropdown-item href="#" v-on:click="logout"><font-awesome-icon :icon="faSignOutAlt" />Sign Out</b-dropdown-item>
                     </b-nav-item-dropdown>
+                    <b-nav-item right to="/about">About</b-nav-item>
                 </b-navbar-nav>
             </b-collapse>
         </b-navbar>

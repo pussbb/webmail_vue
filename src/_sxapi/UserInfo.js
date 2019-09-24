@@ -48,4 +48,8 @@ export class UserInfo {
     get mailboxUri() {
         return this.#data["mailbox"]
     }
+
+    get isActiveSyncUser() {
+        return this.#data["isasuser"] === true;
+    }
 }

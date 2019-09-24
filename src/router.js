@@ -8,6 +8,7 @@ import CalendarPage from './components/CalendarPage'
 import TasksPage from "./components/TasksPage"
 import PeoplePage from "./components/PeoplePage"
 import ProfilePage from "./components/ProfilePage"
+import AboutPage from "./components/AboutPage"
 
 import store from "@/store";
 import axios from "axios"
@@ -46,6 +47,11 @@ export const router = new Router({
             path: '/profile',
             name: 'profile',
             component: ProfilePage
+        },
+        {
+            path: '/about',
+            name: 'about',
+            component: AboutPage
         },
 
 
