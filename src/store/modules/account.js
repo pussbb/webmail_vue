@@ -1,10 +1,8 @@
 
 
-import ClientConnection from '@/_sxapi/ClientConnection'
-import config from "@/config";
+import client from '@/_sxapi/'
 import {isNull} from "bootstrap-vue/esm/utils/inspect";
 
-const client  = new ClientConnection({baseURL: config.apiUrl});
 
 const state = {
     status: '',
@@ -15,6 +13,7 @@ const getters = {
     isLoggedIn: state => !isNull(state.user),
     authStatus: state => state.status,
     userInfo: state => state.user,
+    apiClient: () => client
 }
 
 const actions = {
@@ -36,6 +35,7 @@ const actions = {
         commit('logout')
         client.logout()
     }
+
 }
 
 const mutations = {

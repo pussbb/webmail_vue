@@ -8,7 +8,7 @@
 import { mapState } from "vuex"
 
 export default {
-  name: 'webmail',
+  name: 'Webmail',
   computed: {
     ...mapState('account', ['user']),
   }

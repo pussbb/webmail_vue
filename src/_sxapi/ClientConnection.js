@@ -38,4 +38,16 @@ export default class ClientConnection {
     get userInfo() {
         return this.#userinfo;
     }
+
+    get folders() {
+        return new Promise((resolve, reject) => {
+            const config = {
+                params: {'output': 'json', 'treeview': 'true'}
+            }
+            this._instance
+                .get(this.#userinfo.mailboxUri, config)
+                .then(resp => resolve(resp.data))
+                .catch(err => reject(err));
+        });
+    }
 }

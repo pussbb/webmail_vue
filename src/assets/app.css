@@ -8917,4 +8917,7 @@ body {
   align-items: center;
   background-color: #f5f5f5; }
 
+ul {
+  list-style-type: none; }
+
 /*# sourceMappingURL=app.css.map */
