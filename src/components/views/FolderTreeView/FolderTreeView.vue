@@ -9,16 +9,22 @@
 <script>
 
     import FolderTreeItem from "./FolderTreeItem"
+    import { mapGetters } from 'vuex'
 
     export default {
+        props: {
+            filterFolderType: null
+        },
         name: 'FolderTreeView',
         components: {
             FolderTreeItem
         },
 
         computed: {
+            ...mapGetters('mailbox', ['foldersBySpecificType']),
+
             folders: function () {
-                const _folders = this.$store.state.mailbox.folders;
+                const _folders = this.foldersBySpecificType(this.filterFolderType);
                 return [
                     ..._folders.filter(i => i.namespace === 'private').sort((a, b) => a.compareTo(b)),
                     ..._folders.filter(i => i.namespace === 'others').sort((a, b) => a.compareTo(b)),
@@ -29,7 +35,8 @@
 
         created() {
             this.$store.dispatch('mailbox/getFolders')
-        }
+        },
+
     }
 </script>
 

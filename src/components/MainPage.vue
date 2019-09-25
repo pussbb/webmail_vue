@@ -20,6 +20,18 @@ export default {
     Header,
     FolderTreeView
   },
+
+  beforeRouteUpdate (to, from, next) {
+    if (to.params.folderdref) {
+      this.$store.dispatch('mailbox/setCurrentFolder', to.params.folderdref);
+    }
+    next();
+  },
+  mounted() {
+    if (this.$route.params.folderdref) {
+      this.$store.dispatch('mailbox/setCurrentFolder', this.$route.params.folderdref);
+    }
+  }
 }
 </script>
 

@@ -12,7 +12,6 @@ export default {
   computed: {
     ...mapState('account', ['user']),
   }
-
 }
 
 </script>

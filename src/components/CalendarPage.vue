@@ -39,7 +39,7 @@
 
                     <template slot="drawerBottom">
                         <div class="pa-3">
-
+                            <FolderTreeView :filterFolderType="filter" />
                         </div>
                     </template>
 
@@ -50,6 +50,8 @@
 
 <script>
     import Header from "./Header"
+    import { FolderTypeEnum } from "@/_sxapi/Folder"
+    import FolderTreeView from "./views/FolderTreeView"
 
     import Vue from 'vue'
     import Vuetify from 'vuetify'
@@ -67,17 +69,25 @@
         name: 'CalendarPage',
         components: {
             Header,
+            FolderTreeView
         },
         data: () => ({
             storeKey: 'dayspanState',
             calendar: Calendar.months(),
             readOnly: false,
-            defaultEvents: []
+            defaultEvents: [],
+            filter: FolderTypeEnum.Calendar
         }),
         mounted()
         {
-
+            if (this.$route.params.folderdref) {
+                this.$store.dispatch('mailbox/setCurrentFolder', this.$route.params.folderdref);
+            }
             this.loadState();
+        },
+        beforeRouteLeave (to, from, next) {
+            this.$store.dispatch('mailbox/setCurrentFolder', null);
+            next();
         },
         methods:
             {

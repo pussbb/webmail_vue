@@ -125,7 +125,8 @@ const orderedSpecialFolders = [
 
 export class ScalixFolder {
 
-    #data = {}
+    #data = {};
+    #parent = null;
 
     constructor(data={}) {
         this.#data = data;
@@ -133,7 +134,11 @@ export class ScalixFolder {
         if (this.name === "INBOX" ) {
             this.#data['special'] = 'Inbox';
         }
+
         this.#data['folders'] = this.#data['folders'].map(i => new ScalixFolder(i));
+        if (this.#data['folders'] && this.#data['folders'].length > 0) {
+            this.#parent = this;
+        }
     }
 
     get isSpecialFolder() {
@@ -185,7 +190,30 @@ export class ScalixFolder {
         return Symbol.for(this.#data['type']);
     }
 
+    get isCalendarFolder() {
+        return this.folderType == FolderTypeEnum.Calendar;
+    }
+
+    get isTasksFolder() {
+        return this.folderType == FolderTypeEnum.Tasks;
+    }
+
+    get isContactsFolder() {
+        return this.folderType == FolderTypeEnum.Contacts;
+    }
     get directRef() {
         return this.#data['dref'];
+    }
+
+    get unread() {
+        return this.#data['unread'] || 0;
+    }
+
+    get total() {
+        return this.#data['total'] || 0;
+    }
+
+    get parent() {
+        return this.#parent;
     }
 }

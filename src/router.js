@@ -19,8 +19,9 @@ export const router = new Router({
     mode: 'history',
     routes: [
         {
-            path: '/',
+            path: '/mailbox/:folderdref?',
             name: 'mail',
+            alias: '/',
             component: MainPage,
             //meta: { authorize: [] }
         },
@@ -29,17 +30,17 @@ export const router = new Router({
             component: LoginPage
         },
         {
-            path: '/calendar',
+            path: '/calendar/:folderdref?',
             name: 'calendar',
             component: CalendarPage
         },
         {
-            path: '/tasks',
+            path: '/tasks/:folderdref?',
             name: 'tasks',
             component: TasksPage
         },
         {
-            path: '/people',
+            path: '/people/:folderdref?',
             name: 'people',
             component: PeoplePage
         },
