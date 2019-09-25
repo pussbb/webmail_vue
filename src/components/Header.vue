@@ -2,7 +2,7 @@
     <div>
         <b-navbar toggleable="lg" type="dark" variant="danger">
             <b-navbar-brand href="#" v-if="currentTab">
-                <font-awesome-icon :icon="currentTab.icon" />
+                <i :class="currentTab.icon"></i>
                 {{ currentTab.title }}
             </b-navbar-brand>
             <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
@@ -10,7 +10,7 @@
             <b-collapse id="nav-collapse" is-nav>
                 <b-navbar-nav>
                     <b-nav-item v-for="(tab, index) in tabs" :key="index" v-show="tab !== currentTab" :to="tab.path">
-                        <font-awesome-icon :icon="tab.icon" />
+                        <i :class="tab.icon"></i>
                         {{ tab.title }}
                     </b-nav-item>
 
@@ -33,10 +33,11 @@
                     <b-nav-item-dropdown right>
                         <!-- Using 'button-content' slot -->
                         <template v-slot:button-content>
-                            <font-awesome-icon :icon="faUserCog" />&nbsp;<em>{{ userInfo.displayName }}</em>
+                            <i class="profile-icon"></i>&nbsp;
+                            <em>{{ userInfo.displayName }}</em>
                         </template>
-                        <b-dropdown-item to="/profile"> <font-awesome-icon :icon="faUserCog" /> Profile</b-dropdown-item>
-                        <b-dropdown-item href="#" v-on:click="logout"><font-awesome-icon :icon="faSignOutAlt" />Sign Out</b-dropdown-item>
+                        <b-dropdown-item to="/profile"> <i class="profile-icon"></i>&nbsp;Profile</b-dropdown-item>
+                        <b-dropdown-item href="#" v-on:click="logout"><i class="sign-out-icon"/>&nbsp;Sign Out</b-dropdown-item>
                     </b-nav-item-dropdown>
                     <b-nav-item right to="/about">About</b-nav-item>
                 </b-navbar-nav>
@@ -48,31 +49,28 @@
 <script>
     import {mapGetters} from "vuex"
 
-    import { faUserCog, faSignOutAlt , faMailBulk, faCalendar, faTasks, faPeopleCarry } from '@fortawesome/free-solid-svg-icons'
     export default {
         props: ['tabName'],
         data () {
             return {
-                faUserCog,
-                faSignOutAlt,
                 tabs : {
                     'mail': {
-                        icon: faMailBulk,
+                        icon: 'mail-icon',
                         title: 'Mail',
                         path: '/'
                     },
                     'calendar': {
-                        icon: faCalendar,
+                        icon: 'calendar-icon',
                         title: 'Calendar',
                         path:  '/calendar'
                     },
                     'tasks': {
-                        icon: faTasks,
+                        icon: 'tasks-icon',
                         title: 'Tasks',
                         path: '/tasks'
                     },
                     'people': {
-                        icon: faPeopleCarry,
+                        icon: 'people-icon',
                         title: 'Contacts',
                         path: '/people'
                     }

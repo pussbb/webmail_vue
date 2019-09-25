@@ -1,8 +1,9 @@
 <template>
-    <li disabled>
+    <li>
+        <i :class="folderClassIcon"/>
         {{ item.name }}
         <ul v-show="item.subFolders">
-            <FolderTreeItem v-for="(folder, indx) in item.subFolders"  :key="indx" :item="folder"/>
+            <FolderTreeItem v-for="folder in item.subFolders"  :key="folder.directRef" :item="folder"/>
         </ul>
     </li>
 </template>
@@ -17,6 +18,15 @@
         },
         name: 'FolderTreeItem',
         components: {  },
+
+        computed: {
+            folderClassIcon: function () {
+                if (this.item.isSpecialFolder) {
+                    return `folder-${this.item.specialFolderName}-icon`;
+                }
+                return `folder-${this.item.folderType.description.replace('.', '-')}-icon`;
+            }
+        }
     }
 </script>
 

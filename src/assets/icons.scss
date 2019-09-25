@@ -1,0 +1,67 @@
+
+$fa-font-path: "../../node_modules/@fortawesome/fontawesome-free/webfonts";
+@import "../../node_modules/@fortawesome/fontawesome-free/scss/fontawesome";
+@import "../../node_modules/@fortawesome/fontawesome-free/scss/solid";
+@import "../../node_modules/@fortawesome/fontawesome-free/scss/brands";
+@import "../../node_modules/@fortawesome/fontawesome-free/scss/regular";
+
+[class*='-icon'] {
+  @extend %fa-icon;
+}
+
+.calendar-icon,
+.folder-IPF-Appointment-icon,
+.folder-Calendar-icon {
+  @extend .far, .fa-calendar-alt;
+}
+
+.profile-icon {
+  @extend .fa, .fa-user-cog;
+}
+
+.sign-out-icon {
+  @extend .fa, .fa-sign-out-alt;
+}
+
+.mail-icon,
+.folder-IPF-Note-icon {
+  @extend .fa, .fa-mail-bulk;
+}
+
+.tasks-icon,
+.folder-IPF-Task-icon,
+.folder-Tasks-icon {
+  @extend .fa, .fa-tasks;
+}
+
+.people-icon,
+.folder-IPF-Contact-icon,
+.folder-Contacts-icon {
+  @extend .fa, .fa-address-book;
+}
+
+.folder-IPF-Journal-icon,
+.folder-Journal-icon {
+  @extend .fa, .fa-newspaper;
+}
+
+.folder-IPF-StickyNote-icon,
+.folder-Notes-icon {
+  @extend .fa, .fa-sticky-note;
+}
+
+.folder-Inbox-icon {
+  @extend .fa, .fa-inbox;
+}
+
+.folder-Drafts-icon {
+  @extend .fab, .fa-firstdraft;
+}
+
+.folder-SentItems-icon {
+  @extend .far, .fa-share-square;
+}
+
+.folder-DeletedItems-icon {
+  @extend .far, .fa-trash-alt;
+}

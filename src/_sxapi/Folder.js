@@ -1,21 +1,22 @@
 /*
  * Possible values for the X-FolderClass flag:
  */
-export const FolderTypeEnum = {
-    Mail     : "Mail",      // IPF.Note
-    Calendar : "Calendar",  // IPF.Appointment
-    Contacts : "Contact",   // IPF.Contact
-    Tasks    : "Task",      // IPF.Task
-    Journal  : "Journal",   // IPF.Journal
-    Notes    : "Notes"      // IPF.StickyNote
-};
+
+export const FolderTypeEnum = Object.freeze({
+    Mail     : Symbol.for("IPF.Mail"),      // IPF.Note
+    Calendar : Symbol.for("IPF.Appointment"),  // IPF.Appointment
+    Contacts : Symbol.for("IPF.Contact"),   // IPF.Contact
+    Tasks    : Symbol.for("IPF.Task"),      // IPF.Task
+    Journal  : Symbol.for("IPF.Journal"),   // IPF.Journal
+    Notes    : Symbol.for("IPF.StickyNote")      // IPF.StickyNote
+});
 
 
 
 /*
  * Possible values for the X-SpecialFolder flag:
  */
-export const SpecialFolderEnum = {
+export const SpecialFolderEnum = Object.freeze({
     Inbox          : "Inbox",
     Outbox         : "Outbox",
     SentItems      : "SentItems",
@@ -29,7 +30,7 @@ export const SpecialFolderEnum = {
     Recovery       : "Recovery",
     SharedRoot     : "SharedRoot",
     OtherUsersRoot : "OtherUsersRoot"
-};
+});
 
 
 
@@ -178,5 +179,13 @@ export class ScalixFolder {
         else if ( nameA > nameB )
             return 1;
         return 0;
+    }
+
+    get folderType() {
+        return Symbol.for(this.#data['type']);
+    }
+
+    get directRef() {
+        return this.#data['dref'];
     }
 }
