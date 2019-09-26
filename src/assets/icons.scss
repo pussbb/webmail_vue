@@ -65,3 +65,11 @@ $fa-font-path: "../../node_modules/@fortawesome/fontawesome-free/webfonts";
 .folder-DeletedItems-icon {
   @extend .far, .fa-trash-alt;
 }
+
+.vertical-layout-icon {
+  @extend .fas, .fa-columns;
+}
+
+.horizontal-layout-icon {
+  @extend .vertical-layout-icon, .fa-rotate-270;
+}

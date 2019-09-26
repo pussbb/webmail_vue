@@ -8924,6 +8924,8 @@ input[type="color"].form-control:disabled {
 .folder-Journal-icon, .folder-IPF-StickyNote-icon,
 .folder-Notes-icon, .folder-Inbox-icon,
 .fas,
+.vertical-layout-icon,
+.horizontal-layout-icon,
 .far,
 .calendar-icon,
 .folder-IPF-Appointment-icon,
@@ -9030,6 +9032,8 @@ input[type="color"].form-control:disabled {
 .fa-pull-left.folder-Journal-icon, .fa-pull-left.folder-IPF-StickyNote-icon,
 .fa-pull-left.folder-Notes-icon, .fa-pull-left.folder-Inbox-icon,
 .fas.fa-pull-left,
+.fa-pull-left.vertical-layout-icon,
+.fa-pull-left.horizontal-layout-icon,
 .far.fa-pull-left,
 .fa-pull-left.calendar-icon,
 .fa-pull-left.folder-IPF-Appointment-icon,
@@ -9049,6 +9053,8 @@ input[type="color"].form-control:disabled {
 .fa-pull-right.folder-Journal-icon, .fa-pull-right.folder-IPF-StickyNote-icon,
 .fa-pull-right.folder-Notes-icon, .fa-pull-right.folder-Inbox-icon,
 .fas.fa-pull-right,
+.fa-pull-right.vertical-layout-icon,
+.fa-pull-right.horizontal-layout-icon,
 .far.fa-pull-right,
 .fa-pull-right.calendar-icon,
 .fa-pull-right.folder-IPF-Appointment-icon,
@@ -9079,7 +9085,7 @@ input[type="color"].form-control:disabled {
   -ms-filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=2)";
   transform: rotate(180deg); }
 
-.fa-rotate-270 {
+.fa-rotate-270, .horizontal-layout-icon {
   -ms-filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=3)";
   transform: rotate(270deg); }
 
@@ -9098,6 +9104,7 @@ input[type="color"].form-control:disabled {
 :root .fa-rotate-90,
 :root .fa-rotate-180,
 :root .fa-rotate-270,
+:root .horizontal-layout-icon,
 :root .fa-flip-horizontal,
 :root .fa-flip-vertical,
 :root .fa-flip-both {
@@ -9973,7 +9980,7 @@ readers do not read off random characters that represent icons */
 .fa-coins:before {
   content: ""; }
 
-.fa-columns:before {
+.fa-columns:before, .vertical-layout-icon:before, .horizontal-layout-icon:before {
   content: ""; }
 
 .fa-comment:before {
@@ -13357,7 +13364,9 @@ readers do not read off random characters that represent icons */
 .folder-Contacts-icon, .folder-IPF-Journal-icon,
 .folder-Journal-icon, .folder-IPF-StickyNote-icon,
 .folder-Notes-icon, .folder-Inbox-icon,
-.fas {
+.fas,
+.vertical-layout-icon,
+.horizontal-layout-icon {
   font-family: 'Font Awesome 5 Free';
   font-weight: 900; }
 

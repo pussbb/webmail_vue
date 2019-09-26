@@ -1,12 +1,16 @@
 <script>
 import MailBoxLayout from "./MailBoxLayout"
+import MailboxView from "./views/MailboxView/MailboxView"
 
 export default {
-  name: 'MainPage',
-  extends: MailBoxLayout,
-  data() {
-    return { currentTabName: 'mail'}
-  }
+    name: 'MainPage',
+    extends: MailBoxLayout,
+    components: {
+        'message-view': MailboxView
+    },
+    data() {
+        return { currentTabName: 'mail'}
+    }
 }
 </script>
 

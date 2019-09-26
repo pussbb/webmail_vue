@@ -12,12 +12,12 @@
                 <em v-show="userInfo.isActiveSyncUser"> and allowed to use ActiveSync feature</em>
             </template>
             <hr class="my-4">
-            <p>
+            <div>
                 Users email addresses:
                 <ul>
                     <li v-for="(email, index) in userInfo.senderInternetAdresses" :key="index">{{email}}</li>
                 </ul>
-            </p>
+            </div>
         </b-jumbotron>
     </div>
 </template>
@@ -43,7 +43,7 @@
     div.jumbotron {
         margin: 1% 1%;
     }
-    div.jumbotron > p:not(:first-child) {
+    div.jumbotron > div:not(:first-child) {
         text-align: left;
     }
 </style>
