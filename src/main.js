@@ -9,6 +9,7 @@ import './assets/app.scss'
 
 Vue.use(BootstrapVue)
 Vue.config.productionTip = true
+Vue.config.performance = true;
 
 new Vue({
   el: `#app`,

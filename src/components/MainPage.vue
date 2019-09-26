@@ -1,36 +1,10 @@
-<template>
-  <div>
-    <Header tabName="mail"></Header>
-    <b-container fluid>
-      <b-row>
-        <b-col cols="2"><FolderTreeView /></b-col>
-        <b-col>2 of 2</b-col>
-      </b-row>
-    </b-container>
-  </div>
-</template>
-
 <script>
-  import Header from "./Header"
-  import FolderTreeView from "./views/FolderTreeView"
-
+import MailBoxLayout from "./MailBoxLayout"
 export default {
   name: 'MainPage',
-  components: {
-    Header,
-    FolderTreeView
-  },
-
-  beforeRouteUpdate (to, from, next) {
-    if (to.params.folderdref) {
-      this.$store.dispatch('mailbox/setCurrentFolder', to.params.folderdref);
-    }
-    next();
-  },
-  mounted() {
-    if (this.$route.params.folderdref) {
-      this.$store.dispatch('mailbox/setCurrentFolder', this.$route.params.folderdref);
-    }
+  extends: MailBoxLayout,
+  data() {
+    return { currentTabName: 'mail'}
   }
 }
 </script>

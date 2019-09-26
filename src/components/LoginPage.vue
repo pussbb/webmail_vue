@@ -1,5 +1,6 @@
 <template>
-        <form class="form-signin rounded border" @submit.prevent="handleSubmit" v-onсe>
+    <div v-once>
+        <form class="form-signin rounded border" @submit.prevent="handleSubmit">
             <div class="text-center mb-4">
                 <h1 class="h3 mb-3 font-weight-normal">Sign In</h1>
                 <b-alert v-show="authStatus == 'error'" show variant="danger">Username or password invalid</b-alert>
@@ -42,6 +43,7 @@
             </b-button>
             <p class="mt-5 mb-3 text-muted text-center">&copy; 2019</p>
         </form>
+    </div>
 </template>
 
 <script>
