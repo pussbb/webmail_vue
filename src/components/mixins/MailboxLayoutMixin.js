@@ -1,4 +1,6 @@
 
+import { mapGetters } from 'vuex'
+
 export default {
     data() {
         return {
@@ -6,6 +8,10 @@ export default {
             currentTabName: null,
             resetSelectedFolder: false
         }
+    },
+
+    computed: {
+        ...mapGetters('mailbox', ['currentFolderDref', 'findFolder']),
     },
 
     beforeRouteUpdate (to, from, next) {

@@ -21,15 +21,29 @@
         },
 
         computed: {
-            ...mapGetters('mailbox', ['foldersBySpecificType']),
+            ...mapGetters('mailbox', ['foldersBySpecificType', 'currentFolderDref', 'findFolder']),
 
             folders: function () {
                 const _folders = this.foldersBySpecificType(this.filterFolderType);
-                return [
+                const res = [
                     ..._folders.filter(i => i.namespace === 'private').sort((a, b) => a.compareTo(b)),
                     ..._folders.filter(i => i.namespace === 'others').sort((a, b) => a.compareTo(b)),
                     ..._folders.filter(i => i.namespace === 'shared').sort((a, b) => a.compareTo(b)),
-                ]
+                ];
+                if (res) {
+                    let folder = this.findFolder(this.currentFolderDref)
+                    if (folder && (this.filterFolderType && folder.folderType != this.filterFolderType)) {
+                        this.$store.dispatch('mailbox/setCurrentFolder', null);
+                    }
+                    if (!this.currentFolderDref || !folder) {
+                        folder = res[0];
+                        if (folder) {
+                            this.$store.dispatch('mailbox/setCurrentFolder', folder.directRef);
+                        }
+                    }
+                }
+
+                return res;
             }
         },
 

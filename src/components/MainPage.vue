@@ -1,5 +1,6 @@
 <script>
 import MailBoxLayout from "./MailBoxLayout"
+
 export default {
   name: 'MainPage',
   extends: MailBoxLayout,

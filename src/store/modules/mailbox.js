@@ -23,6 +23,9 @@ const getters = {
             }
             return null;
         };
+        if (!folderDref) {
+            return null;
+        }
         return findByDref(state.folders);
     },
 
