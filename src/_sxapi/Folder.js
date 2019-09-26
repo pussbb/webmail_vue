@@ -127,6 +127,7 @@ export class ScalixFolder {
 
     #data = {};
     #parent = null;
+    #emails = []
 
     constructor(data={}) {
         this.#data = data;
@@ -215,5 +216,13 @@ export class ScalixFolder {
 
     get parent() {
         return this.#parent;
+    }
+
+    get emails() {
+        return this.#emails;
+    }
+
+    set emails(emails) {
+        this.#emails = emails;
     }
 }

@@ -1,8 +1,16 @@
 <template>
-    <div> EMAIL ITEM GOES HERE</div>
+    <li>
+        From: {{item.from}} <br>
+        {{item.subject}}
+    </li>
 </template>
 <script>
     export default {
+        props: {
+            item: {
+                required: true
+            }
+        },
         name: 'emails-item-view',
     }
 </script>

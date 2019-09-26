@@ -1,7 +1,8 @@
 
 import axios from "axios"
-import {UserInfo} from "@/_sxapi/UserInfo";
-import {ScalixFolder} from "@/_sxapi/Folder";
+import {UserInfo} from "./UserInfo";
+import {ScalixFolder} from "./Folder";
+import ScalixMessage from "./message"
 
 export default class ClientConnection {
 
@@ -14,7 +15,6 @@ export default class ClientConnection {
     _newInstance(baseURL) {
         this._instance = axios.create({
             baseURL,
-            withCredentials: true,
             //proxy: false
         });
     }
@@ -51,6 +51,22 @@ export default class ClientConnection {
                     const revision = resp.data.revision
                     const folders = resp.data.folders.map((i) =>  new ScalixFolder(i))
                     resolve({ revision, folders });
+                })
+                .catch(err => reject(err));
+        });
+    }
+
+    // eslint-disable-next-line no-unused-vars
+    folderEmails(folder, from, to) {
+        const url = `${this.#userinfo.mailboxUri}/${(folder instanceof ScalixFolder) ? folder.directRef : folder}`;
+        const config = {
+            params: {'output': 'json'}
+        }
+        return new Promise((resolve, reject) => {
+            this._instance
+                .get(url, config)
+                .then(resp => {
+                    resolve(resp.data.map((i) =>  ScalixMessage.ScalixMessage.fromJson(i)));
                 })
                 .catch(err => reject(err));
         });

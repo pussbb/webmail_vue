@@ -3,12 +3,15 @@ import client from '@/_sxapi/'
 const state = {
     revision: '',
     folders: [],
-    currentFolder: null
+    currentFolder: null,
+    messageLoadingStatus: 'initial'
 }
 
 
 const getters = {
     currentFolderDref: state => state.currentFolder ? state.currentFolder.directRef : null,
+
+    currentFolderMessages: state => state.currentFolder ? state.currentFolder.emails : [],
 
     findFolder: state => folderDref => {
         let findByDref = function(arr) {
@@ -47,6 +50,26 @@ const actions = {
 
     setCurrentFolder({commit}, folderDref) {
         commit('setCurrentFolder', getters.findFolder(state)(folderDref));
+        commit('setCurrentFolderEmailsFetchingStatus', "initial");
+    },
+
+    getCurrentFolderMessages({commit}) {
+        if (!state.currentFolder) {
+            throw 'Select a folder';
+        }
+
+        const dref = state.currentFolder.directRef;
+        commit('setCurrentFolderEmailsFetchingStatus', 'loading');
+        client.folderEmails(state.currentFolder).then(data => {
+            if (dref === state.currentFolder.directRef) {
+                commit('setCurrentFolderEmails', data);
+            } else {
+                console.log('folder changed')
+            }
+        }).catch(err => {
+            console.error(err)
+            commit('setCurrentFolderEmailsFetchingStatus', 'done')
+        });
     }
 }
 
@@ -61,6 +84,15 @@ const mutations = {
 
     setCurrentFolder(state, folder) {
         state.currentFolder = folder;
+    },
+
+    setCurrentFolderEmails(state, emails) {
+        state.currentFolder.emails = emails;
+        state.messageLoadingStatus = 'done'
+    },
+
+    setCurrentFolderEmailsFetchingStatus(state, status) {
+        state.messageLoadingStatus = status
     }
 }
 
