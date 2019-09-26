@@ -1,5 +1,5 @@
 <template>
-        <form class="form-signin rounded border" @submit.prevent="handleSubmit">
+        <form class="form-signin rounded border" @submit.prevent="handleSubmit" v-onсe>
             <div class="text-center mb-4">
                 <h1 class="h3 mb-3 font-weight-normal">Sign In</h1>
                 <b-alert v-show="authStatus == 'error'" show variant="danger">Username or password invalid</b-alert>

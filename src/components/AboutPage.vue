@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div v-once>
         <Header tabName=""></Header>
 
         <b-jumbotron>
