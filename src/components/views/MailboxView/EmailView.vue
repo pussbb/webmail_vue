@@ -26,6 +26,7 @@
         <div v-else-if="loading"  class="mx-auto">
             <b-spinner label="Loading..." class="mx-auto"></b-spinner>
         </div>
+        <div v-else-if="error">Error during loading message</div>
         <div v-else></div>
     </div>
 </template>
@@ -37,7 +38,8 @@
         data() {
             return {
                 email: null,
-                loading: false
+                loading: false,
+                error: false
             }
         },
         computed: {
@@ -59,11 +61,12 @@
         methods: {
             loadEmail(msgdref) {
                 if (!msgdref) {
-                    this.item = null
+                    this.item = '';
                     return
                 }
                 const folderDref = this.currentFolderDref;
                 this.loading = true
+                this.error = false
                 this.fetchEmail(msgdref)
                     .then( data => {
                         if (folderDref === this.currentFolderDref) {
@@ -73,18 +76,36 @@
                         }
 
                     }).catch( err => {
+                    if (folderDref === this.currentFolderDref) {
+                        this.error = true;
+                    }
+
                     console.log(err)
-                }).finally(() => this.loading = false)
+                }).finally(() => {
+                    if (folderDref === this.currentFolderDref) {
+                        this.loading = false
+                    }
+
+                })
             },
         },
 
         created() {
-            this.loadEmail(this.$router.currentRoute.params.msgdref)
+            if (this.email && this.email.folderDref !== this.$router.currentRoute.params.folderdref ) {
+                this.email = null;
+            } else {
+                this.loadEmail(this.$router.currentRoute.params.msgdref)
+            }
         },
         watch: {
             $route(to, from) {
                 // react to route changes...
-                this.loadEmail(to.params.msgdref)
+                if (this.email && this.email.folderDref !== to.params.folderdref ) {
+                    this.email = null;
+                } else {
+                    this.loadEmail(to.params.msgdref)
+                }
+
             }
         }
     }
