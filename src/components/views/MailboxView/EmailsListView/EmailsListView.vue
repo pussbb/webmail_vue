@@ -1,13 +1,13 @@
 <template>
-    <div>
+    <div id="emails">
         <ul v-if="emails.length !== 0">
             <EmailItem v-for="email in emails" :key="email.uid" :item="email" />
         </ul>
         <ul v-else>
-            <li v-show="messageLoadingStatus === 'loading'" class="loading">
+            <li v-show="messagesLoadingStatus === 'loading'" class="loading">
                 <b-spinner label="Loading..." class="mx-auto"></b-spinner>
             </li>
-            <li v-show="messageLoadingStatus !== 'loading'">There are no messages in that mailbox.</li>
+            <li v-show="messagesLoadingStatus !== 'loading'">There are no messages in that mailbox.</li>
         </ul>
     </div>
 </template>
@@ -27,12 +27,12 @@
         },
 
         computed: {
-            ...mapState('mailbox', ['currentFolder', 'messageLoadingStatus']),
+            ...mapState('mailbox', ['currentFolder', 'messagesLoadingStatus']),
 
         },
 
         watch: {
-            messageLoadingStatus() {
+            messagesLoadingStatus() {
                 if (this.$store.state.mailbox.currentFolder) {
                     this.emails = this.$store.state.mailbox.currentFolder.emails;
                 }
@@ -58,5 +58,6 @@
         width: 100%;
         padding-left: 50%;
     }
+
 
 </style>

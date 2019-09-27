@@ -11,7 +11,7 @@
         </b-button-toolbar>
 
         <div v-if="verticalLayout">
-            <b-container fluid>
+            <b-container fluid id="verticalLayout">
                 <b-row>
                     <b-col class="border-right">
                         <EmailsListView />
@@ -23,13 +23,14 @@
             </b-container>
         </div>
         <div v-else>
-            <b-container fluid>
+            <b-container fluid id="horizontalLayout">
                 <b-row>
                     <div class="col" css="height: 50%">
                         <EmailsListView />
                     </div>
 
                 </b-row>
+                <b-row class="bg-dark divider">&nbsp;</b-row>
                 <b-row>
                     <div class="col" css="height: 50%">
                         <EmailView />
@@ -61,6 +62,7 @@
         methods: {
             changeLayout() {
                 this.verticalLayout = !this.verticalLayout;
+                this.$forceUpdate();
             }
         }
     }
@@ -69,4 +71,18 @@
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 
+    #verticalLayout #emails {
+        overflow: auto;
+        max-height: 70vh;
+        max-width: 40vw;
+    }
+    #horizontalLayout #emails {
+        overflow: auto;
+        max-height: 70vh;
+        max-width: 80vw;
+    }
+    .divider {
+        max-height: 2px;
+        margin: 5px 5px;
+    }
 </style>

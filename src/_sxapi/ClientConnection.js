@@ -56,14 +56,38 @@ export default class ClientConnection {
         });
     }
 
+    _folder_url(folder) {
+        return `${this.#userinfo.mailboxUri}/${(folder instanceof ScalixFolder) ? folder.directRef : folder}`
+    }
     // eslint-disable-next-line no-unused-vars
     folderEmails(folder, from, to) {
-        const url = `${this.#userinfo.mailboxUri}/${(folder instanceof ScalixFolder) ? folder.directRef : folder}`;
+        const url = this._folder_url(folder);
         const config = {
             params: {
                 'output': 'json',
                 'sort': 'date',
                 'sort-direction': 'desc'
+            }
+        }
+        return new Promise((resolve, reject) => {
+            this._instance
+                .get(url, config)
+                .then(resp => {
+                    resolve(resp.data.map((i) =>  {
+                        return Message.ScalixMessage.fromJson(i)
+                    }));
+                })
+                .catch(err => reject(err));
+        });
+    }
+
+    fetchFolderEmail(folder, msgDref) {
+        const url = this._folder_url(folder);
+        const config = {
+            params: {
+                'output': 'json',
+                'detail': 'text',
+                'drefs': msgDref
             }
         }
         return new Promise((resolve, reject) => {

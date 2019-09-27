@@ -1,5 +1,7 @@
 <template>
-    <li class="border" @click.prevent="onClick" :class="{'border bg-warning border-success': item.unread}">
+    <li class="border" @click.prevent="onClick"
+        :class="{'border ': item.unread,
+            'border-success bg-warning ' : (item.unread && !active), 'bg-secondary border-dark text-light': active}">
         From: {{item.from}} <br>
         {{item.subject}}
     </li>
@@ -12,7 +14,14 @@
             }
         },
         name: 'emails-item-view',
-
+        data() {
+            return {active: false}
+        },
+        watch: {
+            $route(to, from) {
+                this.active = this.item.directRef === to.params.msgdref
+            }
+        },
         methods: {
             onClick() {
 
@@ -23,9 +32,9 @@
                         msgdref: this.item.directRef
                     }
                 }).catch(err => {
-                    if (!(err instanceof 'NavigationDuplicated')) {
-                        throw err;
-                    }
+                   // if (!(err instanceof NavigationDuplicated)) {
+                       /// throw err;
+                   // }
                 });
             }
         }

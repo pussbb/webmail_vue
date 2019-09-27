@@ -29,12 +29,32 @@ class ScalixMessage {
         return this.#data['from']
     }
 
+    get to() {
+        return this.#data['to']
+    }
+
+    get bcc() {
+        return this.#data['bcc']
+    }
+
+    get cc() {
+        return this.#data['cc']
+    }
+
     get directRef() {
         return this.#data['dref']
     }
 
     get folderDirectRef() {
         return this.#data['parent']
+    }
+
+    get parts() {
+        return this.#data['parts']
+    }
+
+    get received() {
+        return this.#data['received']
     }
 
     get unread() {

@@ -4,13 +4,25 @@ const state = {
     revision: '',
     folders: [],
     currentFolder: null,
-    messageLoadingStatus: 'initial'
+    messagesLoadingStatus: 'initial',
 }
 
 
 const getters = {
     currentFolderDref: state => state.currentFolder ? state.currentFolder.directRef : null,
 
+    fetchEmail: state => msgDref => {
+        return new Promise((resolve, reject) => {
+            if (!state.currentFolder) {
+                reject('select folder')
+            }
+            client
+                .fetchFolderEmail(state.currentFolder.directRef, msgDref)
+                .then(data =>  resolve(data))
+                .catch(err => reject(err))
+        });
+
+    },
 
     findFolder: state => folderDref => {
         let findByDref = function(arr) {
@@ -69,7 +81,7 @@ const actions = {
             console.error(err)
         }).finally( () => commit('setCurrentFolderEmailsFetchingStatus', 'done'));
 
-    }
+    },
 }
 
 const mutations = {
@@ -90,7 +102,7 @@ const mutations = {
     },
 
     setCurrentFolderEmailsFetchingStatus(state, status) {
-        state.messageLoadingStatus = status
+        state.messagesLoadingStatus = status
     }
 }
 
