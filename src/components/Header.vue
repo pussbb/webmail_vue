@@ -9,7 +9,7 @@
 
             <b-collapse id="nav-collapse" is-nav>
                 <b-navbar-nav>
-                    <b-nav-item v-for="(tab, index) in tabs" :key="index" v-show="tab !== currentTab" :to="tab.path">
+                    <b-nav-item :key="index" :to="tab.path" v-for="(tab, index) in tabs" v-show="tab !== currentTab">
                         <i :class="tab.icon"></i>
                         {{ tab.title }}
                     </b-nav-item>
@@ -19,11 +19,11 @@
                 <!-- Right aligned nav items -->
                 <b-navbar-nav class="ml-auto">
                     <b-nav-form>
-                        <b-form-input size="sm" class="mr-sm-2" placeholder="Search(Coming soon)"></b-form-input>
-                        <b-button size="sm" class="my-2 my-sm-0" disabled type="submit">Search</b-button>
+                        <b-form-input class="mr-sm-2" placeholder="Search(Coming soon)" size="sm"></b-form-input>
+                        <b-button class="my-2 my-sm-0" disabled size="sm" type="submit">Search</b-button>
                     </b-nav-form>
 
-                    <b-nav-item-dropdown hidden text="Lang" right>
+                    <b-nav-item-dropdown hidden right text="Lang">
                         <b-dropdown-item href="#">EN</b-dropdown-item>
                         <b-dropdown-item href="#">ES</b-dropdown-item>
                         <b-dropdown-item href="#">RU</b-dropdown-item>
@@ -36,8 +36,9 @@
                             <i class="profile-icon"></i>&nbsp;
                             <em>{{ userInfo.displayName }}</em>
                         </template>
-                        <b-dropdown-item to="/profile"> <i class="profile-icon"></i>&nbsp;Profile</b-dropdown-item>
-                        <b-dropdown-item href="#" v-on:click="logout"><i class="sign-out-icon"/>&nbsp;Sign Out</b-dropdown-item>
+                        <b-dropdown-item to="/profile"><i class="profile-icon"></i>&nbsp;Profile</b-dropdown-item>
+                        <b-dropdown-item href="#" v-on:click="logout"><i class="sign-out-icon"/>&nbsp;Sign Out
+                        </b-dropdown-item>
                     </b-nav-item-dropdown>
                     <b-nav-item right to="/about">About</b-nav-item>
                 </b-navbar-nav>
@@ -51,9 +52,9 @@
 
     export default {
         props: ['tabName'],
-        data () {
+        data() {
             return {
-                tabs : {
+                tabs: {
                     'mail': {
                         icon: 'mail-icon',
                         title: 'Mail',
@@ -62,7 +63,7 @@
                     'calendar': {
                         icon: 'calendar-icon',
                         title: 'Calendar',
-                        path:  '/calendar'
+                        path: '/calendar'
                     },
                     'tasks': {
                         icon: 'tasks-icon',
@@ -84,7 +85,7 @@
             }
         },
         methods: {
-            logout : function(e) {
+            logout: function (e) {
                 e.preventDefault();
                 this.$store.dispatch('account/logout');
                 this.$router.push('/login');

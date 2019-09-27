@@ -1,5 +1,4 @@
-
-import { mapGetters } from 'vuex'
+import {mapGetters} from 'vuex'
 
 export default {
     data() {
@@ -14,7 +13,7 @@ export default {
         ...mapGetters('mailbox', ['currentFolderDref', 'findFolder']),
     },
 
-    beforeRouteUpdate (to, from, next) {
+    beforeRouteUpdate(to, from, next) {
         if (to.params.folderdref) {
             this.$store.dispatch('mailbox/setCurrentFolder', to.params.folderdref);
         }
@@ -27,7 +26,7 @@ export default {
         }
     },
 
-    beforeRouteLeave (to, from, next) {
+    beforeRouteLeave(to, from, next) {
         if (this.resetSelectedFolder) {
             this.$store.dispatch('mailbox/setCurrentFolder', null);
         }

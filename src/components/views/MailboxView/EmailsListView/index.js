@@ -1,4 +1,3 @@
-
 import EmailsListView from "./EmailsListView"
 
-export  default EmailsListView
+export default EmailsListView

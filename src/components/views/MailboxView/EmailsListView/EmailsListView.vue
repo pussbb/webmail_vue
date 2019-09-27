@@ -1,11 +1,11 @@
 <template>
     <div id="emails">
         <ul v-if="emails.length !== 0">
-            <EmailItem v-for="email in emails" :key="email.uid" :item="email" />
+            <EmailItem :item="email" :key="email.uid" v-for="email in emails"/>
         </ul>
         <ul v-else>
-            <li v-show="messagesLoadingStatus === 'loading'" class="loading">
-                <b-spinner label="Loading..." class="mx-auto"></b-spinner>
+            <li class="loading" v-show="messagesLoadingStatus === 'loading'">
+                <b-spinner class="mx-auto" label="Loading..."></b-spinner>
             </li>
             <li v-show="messagesLoadingStatus !== 'loading'">There are no messages in that mailbox.</li>
         </ul>
@@ -13,7 +13,7 @@
 </template>
 <script>
     import EmailItem from "./EmailItem"
-    import { mapState } from 'vuex'
+    import {mapState} from 'vuex'
 
     export default {
         name: 'emails-list-view',
@@ -23,7 +23,7 @@
         },
 
         data() {
-            return {emails:[]}
+            return {emails: []}
         },
 
         computed: {

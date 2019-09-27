@@ -10,8 +10,8 @@
             <hr>
             <div v-if="htmlPart">
                 <b-embed
-                        type="iframe"
                         :srcDoc="htmlPart.body"
+                        type="iframe"
                 ></b-embed>
             </div>
             <div v-else-if="textPart">
@@ -23,15 +23,15 @@
                 <b> Message Body empty</b>
             </div>
         </div>
-        <div v-else-if="loading"  class="mx-auto">
-            <b-spinner label="Loading..." class="mx-auto"></b-spinner>
+        <div class="mx-auto" v-else-if="loading">
+            <b-spinner class="mx-auto" label="Loading..."></b-spinner>
         </div>
         <div v-else-if="error">Error during loading message</div>
         <div v-else></div>
     </div>
 </template>
 <script>
-    import { mapGetters } from 'vuex'
+    import {mapGetters} from 'vuex'
 
     export default {
         name: 'email-view',
@@ -48,13 +48,13 @@
                 if (!this.email) {
                     return null;
                 }
-                return this.email.parts.filter( i => i.ct === 'text/plain')[0]
+                return this.email.parts.filter(i => i.ct === 'text/plain')[0]
             },
             htmlPart() {
                 if (!this.email) {
                     return null;
                 }
-                return this.email.parts.filter( i => i.ct === 'text/html')[0]
+                return this.email.parts.filter(i => i.ct === 'text/html')[0]
             }
         },
 
@@ -68,18 +68,17 @@
                 this.loading = true
                 this.error = false
                 this.fetchEmail(msgdref)
-                    .then( data => {
+                    .then(data => {
                         if (folderDref === this.currentFolderDref) {
                             this.email = data[0]
                         } else {
                             console.log('folder changed')
                         }
 
-                    }).catch( err => {
+                    }).catch(err => {
                     if (folderDref === this.currentFolderDref) {
                         this.error = true;
                     }
-
                     console.log(err)
                 }).finally(() => {
                     if (folderDref === this.currentFolderDref) {
@@ -91,7 +90,7 @@
         },
 
         created() {
-            if (this.email && this.email.folderDref !== this.$router.currentRoute.params.folderdref ) {
+            if (this.email && this.email.folderDref !== this.$router.currentRoute.params.folderdref) {
                 this.email = null;
             } else {
                 this.loadEmail(this.$router.currentRoute.params.msgdref)
@@ -100,12 +99,10 @@
         watch: {
             $route(to, from) {
                 // react to route changes...
-                if (this.email && this.email.folderDref !== to.params.folderdref ) {
+                if (this.email && this.email.folderDref !== to.params.folderdref) {
                     this.email = null;
-                } else {
-                    this.loadEmail(to.params.msgdref)
                 }
-
+                this.loadEmail(to.params.msgdref)
             }
         }
     }

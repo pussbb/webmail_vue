@@ -1,32 +1,32 @@
 <template>
     <div v-once>
-        <form class="form-signin rounded border" @submit.prevent="handleSubmit">
+        <form @submit.prevent="handleSubmit" class="form-signin rounded border">
             <div class="text-center mb-4">
                 <h1 class="h3 mb-3 font-weight-normal">Sign In</h1>
-                <b-alert v-show="authStatus === 'error'" show variant="danger">Username or password invalid</b-alert>
+                <b-alert show v-show="authStatus === 'error'" variant="danger">Username or password invalid</b-alert>
             </div>
 
             <div class="form-label-group">
                 <label for="inputEmail">Email address</label>
-                <input type="email"
-                       v-model="username"
-                       id="inputEmail"
+                <input autocomplete
+                       autofocus
                        class="form-control"
+                       id="inputEmail"
                        placeholder="Email address"
                        required
-                       autofocus
-                       autocomplete>
+                       type="email"
+                       v-model="username">
             </div>
 
             <div class="form-label-group">
                 <label for="inputPassword">Password</label>
-                <input type="password"
-                       autocomplete
-                       v-model="password"
-                       id="inputPassword"
+                <input autocomplete
                        class="form-control"
+                       id="inputPassword"
                        placeholder="Password"
-                       required>
+                       required
+                       type="password"
+                       v-model="password">
             </div>
 
             <!--<div class="checkbox mb-3">
@@ -35,10 +35,10 @@
                 </label>
             </div>-->
             <br>
-            <b-button variant="primary" class="btn-lg btn-block"
+            <b-button class="btn-lg btn-block" type="submit"
                       v-bind:class="{ 'disabled': loading }"
-                      type="submit">
-                <b-spinner v-show="loading" small type="grow"></b-spinner>
+                      variant="primary">
+                <b-spinner small type="grow" v-show="loading"></b-spinner>
                 Sign in
             </b-button>
             <p class="mt-5 mb-3 text-muted text-center">&copy; 2019</p>
@@ -47,11 +47,11 @@
 </template>
 
 <script>
-    import { mapGetters, mapActions } from 'vuex'
+    import {mapGetters, mapActions} from 'vuex'
 
     export default {
         name: "LoginPage",
-        data () {
+        data() {
             return {
                 username: '',
                 password: ''
@@ -66,8 +66,8 @@
         methods: {
             ...mapActions('account', ['login']),
             handleSubmit() {
-                const { username, password } = this;
-                this.login({ username, password });
+                const {username, password} = this;
+                this.login({username, password});
             }
         },
 

@@ -3,7 +3,9 @@
         <Header :tabName="currentTabName"></Header>
         <b-container fluid>
             <b-row>
-                <b-col cols="2"><FolderTreeView :filterFolderType="showFolderType" /></b-col>
+                <b-col cols="2">
+                    <FolderTreeView :filterFolderType="showFolderType"/>
+                </b-col>
                 <b-col>
                     <message-view></message-view>
                 </b-col>
@@ -22,7 +24,7 @@
     export default {
         name: 'mailbox-layout',
         mixins: [MailboxLayoutMixin],
-        components:{
+        components: {
             Header,
             FolderTreeView,
             'message-view': BlankView

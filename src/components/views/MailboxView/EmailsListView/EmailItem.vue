@@ -1,7 +1,9 @@
 <template>
-    <li class="border" @click.prevent="onClick"
-        :class="{'border ': item.unread,
-            'border-success bg-warning ' : (item.unread && !active), 'bg-secondary border-dark text-light': active}">
+    <li :class="{'border ': item.unread,
+            'border-success bg-warning ' : (item.unread && !active), 'bg-secondary border-dark text-light': active}"
+        @click.prevent="onClick"
+        class="border"
+        draggable="true">
         From: {{item.from}} <br>
         {{item.subject}}
     </li>
@@ -24,7 +26,6 @@
         },
         methods: {
             onClick() {
-
                 this.$router.push({
                     name: this.$router.currentRoute.name,
                     params: {
@@ -32,9 +33,9 @@
                         msgdref: this.item.directRef
                     }
                 }).catch(err => {
-                   // if (!(err instanceof NavigationDuplicated)) {
-                       /// throw err;
-                   // }
+                    // if (!(err instanceof NavigationDuplicated)) {
+                    /// throw err;
+                    // }
                 });
             }
         }

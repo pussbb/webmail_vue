@@ -1,7 +1,7 @@
 <template>
     <div class="folder-tree-view">
         <ul>
-            <FolderTreeItem v-for="folder in folders" :key="folder.directRef" :item="folder"/>
+            <FolderTreeItem :item="folder" :key="folder.directRef" v-for="folder in folders"/>
         </ul>
     </div>
 </template>
@@ -9,7 +9,7 @@
 <script>
 
     import FolderTreeItem from "./FolderTreeItem"
-    import { mapGetters } from 'vuex'
+    import {mapGetters} from 'vuex'
 
     export default {
         props: {

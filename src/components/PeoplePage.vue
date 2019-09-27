@@ -1,6 +1,5 @@
-
 <script>
-    import { FolderTypeEnum } from "@/_sxapi/Folder"
+    import {FolderTypeEnum} from "@/_sxapi/Folder"
     import MailBoxLayout from "./MailBoxLayout"
     import PeopleView from "./views/PeopleView"
 
@@ -10,7 +9,7 @@
         components: {
             'message-view': PeopleView
         },
-        data: function() {
+        data: function () {
             return {
                 showFolderType: FolderTypeEnum.Contacts,
                 currentTabName: "people",

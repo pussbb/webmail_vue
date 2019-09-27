@@ -15,7 +15,7 @@
             <div>
                 Users email addresses:
                 <ul>
-                    <li v-for="(email, index) in userInfo.senderInternetAdresses" :key="index">{{email}}</li>
+                    <li :key="index" v-for="(email, index) in userInfo.senderInternetAdresses">{{email}}</li>
                 </ul>
             </div>
         </b-jumbotron>
@@ -24,7 +24,7 @@
 
 <script>
     import Header from "./Header"
-    import { mapGetters } from "vuex"
+    import {mapGetters} from "vuex"
 
     export default {
 
@@ -43,6 +43,7 @@
     div.jumbotron {
         margin: 1% 1%;
     }
+
     div.jumbotron > div:not(:first-child) {
         text-align: left;
     }

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <b-button-toolbar key-nav aria-label="Toolbar with button groups">
+        <b-button-toolbar aria-label="Toolbar with button groups" key-nav>
 
             <b-button-group class="mx-1">
                 <b-button @click="changeLayout">
@@ -14,10 +14,10 @@
             <b-container fluid id="verticalLayout">
                 <b-row>
                     <b-col class="border-right">
-                        <EmailsListView />
+                        <EmailsListView/>
                     </b-col>
                     <b-col class="border-left">
-                        <EmailView />
+                        <EmailView/>
                     </b-col>
                 </b-row>
             </b-container>
@@ -26,14 +26,14 @@
             <b-container fluid id="horizontalLayout">
                 <b-row>
                     <div class="col" css="height: 50%">
-                        <EmailsListView />
+                        <EmailsListView/>
                     </div>
 
                 </b-row>
                 <b-row class="bg-dark divider">&nbsp;</b-row>
                 <b-row>
                     <div class="col" css="height: 50%">
-                        <EmailView />
+                        <EmailView/>
                     </div>
                 </b-row>
             </b-container>
@@ -76,11 +76,13 @@
         max-height: 70vh;
         max-width: 40vw;
     }
+
     #horizontalLayout #emails {
         overflow: auto;
         max-height: 70vh;
         max-width: 80vw;
     }
+
     .divider {
         max-height: 2px;
         margin: 5px 5px;

@@ -1,6 +1,5 @@
-
 <script>
-    import { FolderTypeEnum } from "@/_sxapi/Folder"
+    import {FolderTypeEnum} from "@/_sxapi/Folder"
     import MailBoxLayout from "./MailBoxLayout"
     import TasksView from "./views/TasksView"
 
