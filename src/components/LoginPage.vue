@@ -3,7 +3,7 @@
         <form class="form-signin rounded border" @submit.prevent="handleSubmit">
             <div class="text-center mb-4">
                 <h1 class="h3 mb-3 font-weight-normal">Sign In</h1>
-                <b-alert v-show="authStatus == 'error'" show variant="danger">Username or password invalid</b-alert>
+                <b-alert v-show="authStatus === 'error'" show variant="danger">Username or password invalid</b-alert>
             </div>
 
             <div class="form-label-group">

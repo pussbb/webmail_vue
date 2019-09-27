@@ -11,7 +11,6 @@ const state = {
 const getters = {
     currentFolderDref: state => state.currentFolder ? state.currentFolder.directRef : null,
 
-    currentFolderMessages: state => state.currentFolder ? state.currentFolder.emails : [],
 
     findFolder: state => folderDref => {
         let findByDref = function(arr) {
@@ -68,8 +67,8 @@ const actions = {
             }
         }).catch(err => {
             console.error(err)
-            commit('setCurrentFolderEmailsFetchingStatus', 'done')
-        });
+        }).finally( () => commit('setCurrentFolderEmailsFetchingStatus', 'done'));
+
     }
 }
 
@@ -88,7 +87,6 @@ const mutations = {
 
     setCurrentFolderEmails(state, emails) {
         state.currentFolder.emails = emails;
-        state.messageLoadingStatus = 'done'
     },
 
     setCurrentFolderEmailsFetchingStatus(state, status) {

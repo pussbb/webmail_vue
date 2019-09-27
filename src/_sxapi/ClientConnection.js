@@ -2,7 +2,7 @@
 import axios from "axios"
 import {UserInfo} from "./UserInfo";
 import {ScalixFolder} from "./Folder";
-import ScalixMessage from "./message"
+import {Message} from "./message"
 
 export default class ClientConnection {
 
@@ -60,13 +60,19 @@ export default class ClientConnection {
     folderEmails(folder, from, to) {
         const url = `${this.#userinfo.mailboxUri}/${(folder instanceof ScalixFolder) ? folder.directRef : folder}`;
         const config = {
-            params: {'output': 'json'}
+            params: {
+                'output': 'json',
+                'sort': 'date',
+                'sort-direction': 'desc'
+            }
         }
         return new Promise((resolve, reject) => {
             this._instance
                 .get(url, config)
                 .then(resp => {
-                    resolve(resp.data.map((i) =>  ScalixMessage.ScalixMessage.fromJson(i)));
+                    resolve(resp.data.map((i) =>  {
+                        return Message.ScalixMessage.fromJson(i)
+                    }));
                 })
                 .catch(err => reject(err));
         });

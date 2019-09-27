@@ -1,19 +1,19 @@
 <template>
     <div>
-        {{currentFolderMessages}}
-        <ul v-if="currentFolderMessages.length > 0">
-            <EmailItem v-for="email in currentFolderMessages" :key="email.uid" :item="email"></EmailItem>
+        <ul v-if="emails.length !== 0">
+            <EmailItem v-for="email in emails" :key="email.uid" :item="email" />
         </ul>
         <ul v-else>
-
-            <li v-show="messageLoadingStatus !== 'done'"><b-spinner label="Loading..."></b-spinner></li>
-            <li v-show="messageLoadingStatus === 'done'">There are no messages in that mailbox.</li>
+            <li v-show="messageLoadingStatus === 'loading'" class="loading">
+                <b-spinner label="Loading..." class="mx-auto"></b-spinner>
+            </li>
+            <li v-show="messageLoadingStatus !== 'loading'">There are no messages in that mailbox.</li>
         </ul>
     </div>
 </template>
 <script>
     import EmailItem from "./EmailItem"
-    import { mapState, mapGetters } from 'vuex'
+    import { mapState } from 'vuex'
 
     export default {
         name: 'emails-list-view',
@@ -22,25 +22,41 @@
             EmailItem
         },
 
+        data() {
+            return {emails:[]}
+        },
+
         computed: {
             ...mapState('mailbox', ['currentFolder', 'messageLoadingStatus']),
-            ...mapGetters('mailbox', ['currentFolderMessages']),
-        },
-        watch: {
-            currentFolder: {
-                handler(oldVal, newVal) {
-                    if (newVal) {
-                        this.$store.dispatch('mailbox/getCurrentFolderMessages');
-                    }
-                },
-                immediate: true
-            }
 
+        },
+
+        watch: {
+            messageLoadingStatus() {
+                if (this.$store.state.mailbox.currentFolder) {
+                    this.emails = this.$store.state.mailbox.currentFolder.emails;
+                }
+            },
+            currentFolder(val) {
+                if (val) {
+                    this.$store.dispatch('mailbox/getCurrentFolderMessages');
+                }
+            }
         }
     }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+
+    ul {
+        text-align: left;
+        padding-left: 0px;
+    }
+
+    li.loading {
+        width: 100%;
+        padding-left: 50%;
+    }
 
 </style>

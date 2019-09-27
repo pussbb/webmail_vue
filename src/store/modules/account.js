@@ -27,7 +27,8 @@ const actions = {
                 }
             ).catch( err => {
                 commit('auth_error');
-                throw err;
+                console.log(err)
+                //throw err;
             });
     },
 
