@@ -1,8 +1,15 @@
 <template>
     <li :draggable="!item.isSpecialFolder"
-        :id="'folder-tree-item-'+item.directRef">
+        @dragstart="onDragStart"
+        @dragover="onDragOver"
+        @dragenter="onDragEnter"
+        @dragleave="onDragleave"
+        @dragend="onDragEnd"
+        @drop="onDrop"
+        :id="'folder-tree-item-'+item.directRef"
+        class="unselectable">
         <router-link
-                :class="{ active: currentFolderDref === item.directRef }"
+                :class="{ active: currentFolderDref === item.directRef, border: canDrop}"
                 :id="'folder-tree-item-name-'+item.directRef"
                 :to="{name: folderRouteName, params: {'folderdref': item.directRef}}"
                 tag="div">
@@ -24,6 +31,7 @@
 
 <script>
     import {mapGetters} from 'vuex'
+    import {createDragImage} from "@/helpers/dnd";
 
     export default {
         props: {
@@ -32,8 +40,14 @@
             }
         },
         name: 'FolderTreeItem',
+        data() {
+            return {
+                canDrop: false,
+                dragged: false,
+            }
+        },
         computed: {
-            ...mapGetters('mailbox', ['currentFolderDref']),
+            ...mapGetters('mailbox', ['currentFolderDref', 'findFolder']),
 
             folderClassIcon: function () {
                 if (this.item.isSpecialFolder) {
@@ -57,18 +71,47 @@
         },
         methods: {
             onDrop(e) {
-                e.preventDefault()
+                this.canDrop = false
+                e.preventDefault();
+                e.dataTransfer.types.forEach( item => {
+                    const [type, dref] = item.split('/');
+                    const data = e.dataTransfer.getData(item);
+                    if (type === 'folder') {
+                        const folder = this.findFolder(dref);
+                        alert(`Moving folder ${folder?folder.name:dref} (${data}) to ${this.item.name}`)
+                    } else if (type === 'email') {
+                        const folder = this.findFolder(data);
+                        alert(`Moving message ${dref} (from ${folder?folder.name:data}) to ${this.item.name}`)
+                    }
+                });
             },
             onDragEnter(e) {
-                e.preventDefault()
+                if (this.dragged) {
+                    return;
+                }
+                this.canDrop  = e
+                    .dataTransfer
+                    .types
+                    .filter( i => i.startsWith('folder/') || i.startsWith('email/'))
+                    .length > 0;
+
             },
             onDragleave(e) {
                 e.preventDefault()
+                this.canDrop = false;
             },
-            dragStart() {
-                console.log(arguments)
+            onDragOver(e) {
+                e.preventDefault();
             },
-
+            onDragStart(e) {
+                this.dragged = true;
+                e.dataTransfer.dropEffect = 'move';
+                e.dataTransfer.setDragImage(createDragImage(this.item.name, e.pageX, e.pageY), 0, 0);
+                e.dataTransfer.setData(`folder/${this.item.directRef}`, this.item.folderType.description);
+            },
+            onDragEnd() {
+                this.dragged = false;
+            }
 
         }
     }

@@ -2,13 +2,17 @@
     <li :class="{'border ': item.unread,
             'border-success bg-warning ' : (item.unread && !active), 'bg-secondary border-dark text-light': active}"
         @click.prevent="onClick"
-        class="border"
-        draggable="true">
+        class="border unselectable"
+        draggable="true"
+        @dragover.prevent
+        @dragstart="onDragStart">
         From: {{item.from}} <br>
         {{item.subject}}
     </li>
 </template>
 <script>
+    import {createDragImage} from "@/helpers/dnd";
+
     export default {
         props: {
             item: {
@@ -20,7 +24,7 @@
             return {active: false}
         },
         watch: {
-            $route(to, from) {
+            $route(to) {
                 this.active = this.item.directRef === to.params.msgdref
             }
         },
@@ -37,6 +41,16 @@
                     /// throw err;
                     // }
                 });
+            },
+
+            onDragStart(e) {
+                e.dataTransfer.setData(`email/${this.item.directRef}`, this.item.folderDirectRef);
+                e.dataTransfer.setDragImage(
+                    createDragImage(`${e.dataTransfer.types.length} email(s)`, e.pageX, e.pageY),
+                    0,
+                    0
+                );
+                e.dataTransfer.setData('DownloadURL', this.item.directRef);
             }
         }
     }
