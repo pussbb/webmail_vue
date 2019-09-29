@@ -78,7 +78,7 @@ const actions = {
         commit('setCurrentFolderEmailsFetchingStatus', 'loading');
         client.folderEmails(state.currentFolder, from, to, detail).then(data => {
             if (folder) {
-                if (folder.directRef === state.currentFolder.directRef) {
+                if (state.currentFolder && folder.directRef === state.currentFolder.directRef) {
                     commit('setCurrentFolderEmails', data);
                 } else {
                     folder.emails = data;

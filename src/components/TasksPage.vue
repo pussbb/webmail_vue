@@ -1,7 +1,7 @@
 <script>
     import {FolderTypeEnum} from "@/_sxapi/Folder"
     import MailBoxLayout from "./MailBoxLayout"
-    import TasksView from "./views/TasksView"
+    import TasksView from "./views/TasksView/TasksView"
 
     export default {
         name: 'TasksPage',

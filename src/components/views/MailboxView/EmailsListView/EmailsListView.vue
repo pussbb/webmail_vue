@@ -1,7 +1,7 @@
 <template>
     <div id="emails" @scroll.passive='handleScroll'>
         <ul>
-            <EmailItem :item="email" :key="directref" v-for="(email, directref) of emails"/>
+            <EmailItem :item="email" :key="email.directRef" v-for="email in emails"/>
             <li class="loading" v-show="isLoading">
                 <b-spinner class="mx-auto" label="Loading..."></b-spinner>
             </li>
@@ -21,7 +21,9 @@
         },
 
         data() {
-            return {}
+            return {
+                //firstEmail: null
+            }
         },
 
         computed: {
@@ -36,7 +38,7 @@
 
             emails() {
                 return this.$store.state.mailbox.currentFolder ? this.$store.state.mailbox.currentFolder.emails : {}
-            }
+            },
 
         },
 
@@ -46,7 +48,6 @@
                     this.emails = this.$store.state.mailbox.currentFolder.emails;
                 }
             },*/
-
             currentFolder(val) {
                 if (val) {
                     this.$store.dispatch('mailbox/getCurrentFolderMessages', {from:0 , to:50});

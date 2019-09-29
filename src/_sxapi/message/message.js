@@ -1,7 +1,7 @@
 
 import ScalixMessageClass from "./constants"
 import vCard from "vcf"
-import {isArray} from "bootstrap-vue/esm/utils/array";
+import ICAL from "ical.js"
 
 class ScalixMessage {
 
@@ -92,11 +92,17 @@ class ScalixMapiXml extends ScalixMessage {
 
 
 class CalendaringObject extends ScalixMapiXml {
+    _ical = null
     constructor(data = {}) {
         super(data)
+        this.fromICal(data['davBody'])
     }
 
-    fromICal() {
+    fromICal(icalData) {
+        if (!icalData) {
+            return;
+        }
+        this._ical =  new ICAL.Component(ICAL.parse(icalData));
 
     }
 }
@@ -256,12 +262,39 @@ class Post extends ScalixMessage {
 
 class Task extends CalendaringObject {
 
+    _vtodo = null;
+
     constructor(data = {}) {
-        super(data)
+        super(data);
+        if (this._ical) {
+            this._vtodo = this._ical.getFirstSubcomponent('vtodo')
+        }
+    }
+
+    _vtodoItem(item) {
+        if (!this._vtodo) {
+            return null;
+        }
+        return this._vtodo.getFirstPropertyValue(item);
     }
 
     get messageClass() {
         return ScalixMessageClass.ScalixMessageClass.TASK;
+    }
+
+    get description() {
+        return this._vtodoItem('description')
+    }
+
+    get title() {
+        return this._vtodoItem('summary')
+    }
+
+    get percents() {
+        return this._vtodoItem('percent-complete') || 0
+    }
+    get isCompleted() {
+        return this._vtodoItem('completed') != null;
     }
 }
 
