@@ -75,6 +75,7 @@
             // eslint-disable-next-line no-unused-vars
             authStatus(newValue, oldValue) {
                 if (newValue === 'success') {
+                    this.$store.dispatch('notification/addSuccess', 'You are logged in successfully!.')
                     this.$router.push("/");
                 }
             }

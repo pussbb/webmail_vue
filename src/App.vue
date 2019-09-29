@@ -1,17 +1,22 @@
 <template>
   <div id="webmail">
+    <Notifications></Notifications>
     <router-view></router-view>
   </div>
 </template>
 
 <script>
 import { mapState } from "vuex"
+import Notifications from "./Nofications"
 
 export default {
   name: 'Webmail',
+  components: {Notifications},
   computed: {
     ...mapState('account', ['user']),
-  }
+  },
+
+
 }
 
 </script>

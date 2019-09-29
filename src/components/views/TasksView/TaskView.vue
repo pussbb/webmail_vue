@@ -23,6 +23,9 @@
                 return (this.task instanceof Message.Task)
             }
         },
+        methods: {
+
+        }
     }
 </script>
 

@@ -73,14 +73,14 @@
                         if (folderDref === this.currentFolderDref) {
                             this.email = data[0]
                         } else {
-                            console.log('folder changed')
+                            this.$store.dispatch('notification/addWarning', 'FolderChanged')
                         }
 
                     }).catch(err => {
                     if (folderDref === this.currentFolderDref) {
                         this.error = true;
                     }
-                    console.log(err)
+                    this.$store.dispatch('notification/addErr', err)
                 }).finally(() => {
                     if (folderDref === this.currentFolderDref) {
                         this.loading = false
@@ -98,7 +98,7 @@
             }
         },
         watch: {
-            $route(to, from) {
+            $route(to) {
                 // react to route changes...
                 if (this.email && this.email.folderDref !== to.params.folderdref) {
                     this.email = null;
