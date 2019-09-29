@@ -32,6 +32,7 @@
 <script>
     import {mapGetters} from 'vuex'
     import {createDragImage} from "@/helpers/dnd";
+    import {routerName} from "./utils"
 
     export default {
         props: {
@@ -57,16 +58,7 @@
             },
 
             folderRouteName: function () {
-                if (this.item.isCalendarFolder) {
-                    return 'calendar';
-                }
-                if (this.item.isTasksFolder) {
-                    return 'tasks';
-                }
-                if (this.item.isContactsFolder) {
-                    return 'people';
-                }
-                return 'mail'
+                return routerName(this.item);
             }
         },
         methods: {

@@ -60,7 +60,7 @@ export default class ClientConnection {
         return `${this.#userinfo.mailboxUri}/${(folder instanceof ScalixFolder) ? folder.directRef : folder}`
     }
     // eslint-disable-next-line no-unused-vars
-    folderEmails(folder, from=0, to) {
+    folderEmails(folder, from=0, to, detail='summary') {
         const url = this._folder_url(folder);
         const config = {
             params: {
@@ -68,7 +68,8 @@ export default class ClientConnection {
                 'sort': 'date',
                 'sort-direction': 'desc',
                 'start': from,
-                'end': !to ? ((folder instanceof ScalixFolder) ? folder.total : Number.MAX_SAFE_INTEGER): to
+                'end': !to ? ((folder instanceof ScalixFolder) ? folder.total : Number.MAX_SAFE_INTEGER): to,
+                'detail': detail
             }
         }
         return new Promise((resolve, reject) => {

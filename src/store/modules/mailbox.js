@@ -65,7 +65,7 @@ const actions = {
         commit('setCurrentFolderEmailsFetchingStatus', "initial");
     },
 
-    getCurrentFolderMessages({commit}, {from=0, to}) {
+    getCurrentFolderMessages({commit}, {from=0, to, detail}) {
         if (!state.currentFolder) {
             throw 'Select a folder';
         }
@@ -76,7 +76,7 @@ const actions = {
             return
         }
         commit('setCurrentFolderEmailsFetchingStatus', 'loading');
-        client.folderEmails(state.currentFolder, from, to).then(data => {
+        client.folderEmails(state.currentFolder, from, to, detail).then(data => {
             if (folder) {
                 if (folder.directRef === state.currentFolder.directRef) {
                     commit('setCurrentFolderEmails', data);
@@ -104,7 +104,7 @@ const mutations = {
 
     setCurrentFolder(state, folder) {
         state.currentFolder = folder;
-        state.messageLoadedCount = state.currentFolder.emailsLoadedCount
+        state.messageLoadedCount = folder ? folder.emailsLoadedCount : -1;
     },
 
     setCurrentFolderEmails(state, emails) {

@@ -10,6 +10,7 @@
 
     import FolderTreeItem from "./FolderTreeItem"
     import {mapGetters} from 'vuex'
+    import {routerName} from "./utils"
 
     export default {
         props: {
@@ -35,12 +36,7 @@
                     if (folder && (this.filterFolderType && folder.folderType != this.filterFolderType)) {
                         this.$store.dispatch('mailbox/setCurrentFolder', null);
                     }
-                    if (!this.currentFolderDref || !folder) {
-                        folder = res[0];
-                        if (folder) {
-                            this.$store.dispatch('mailbox/setCurrentFolder', folder.directRef);
-                        }
-                    }
+
                 }
 
                 return res;
@@ -50,6 +46,23 @@
         created() {
             this.$store.dispatch('mailbox/getFolders')
         },
+
+        watch: {
+            folders(folders) {
+                if (!this.$router.currentRoute.params.folderdref && folders) {
+                    const folder = folders[0];
+                    if (folder) {
+                        this.$router.push({
+                            name: routerName(folder),
+                            params: {
+                                folderdref: folder.directRef
+                            }
+                        });
+                    }
+
+                }
+            }
+        }
 
     }
 </script>

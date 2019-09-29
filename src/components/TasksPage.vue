@@ -13,6 +13,7 @@
 
         data() {
             return {
+                resetSelectedFolder: true,
                 showFolderType: FolderTypeEnum.Tasks,
                 currentTabName: "tasks",
             }

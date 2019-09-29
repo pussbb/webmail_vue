@@ -1,16 +1,18 @@
 
 import ScalixMessageClass from "./constants"
+import vCard from "vcf"
+import {isArray} from "bootstrap-vue/esm/utils/array";
 
 class ScalixMessage {
 
-    #data = {}
+    _data = {}
 
     constructor(data = {}) {
-        this.#data = data
+        this._data = data
     }
 
     get messageClass() {
-        return this.#data['type']
+        return this._data['type']
     }
 
     static fromJson(data) {
@@ -18,58 +20,73 @@ class ScalixMessage {
     }
 
     get uid() {
-        return this.#data['uid']
+        return this._data['uid']
     }
 
     get subject() {
-        return this.#data['subject']
+        return this._data['subject']
     }
 
     get from() {
-        return this.#data['from']
+        return this._data['from']
     }
 
     get to() {
-        return this.#data['to']
+        return this._data['to']
     }
 
     get bcc() {
-        return this.#data['bcc']
+        return this._data['bcc']
     }
 
     get cc() {
-        return this.#data['cc']
+        return this._data['cc']
     }
 
     get directRef() {
-        return this.#data['dref']
+        return this._data['dref']
     }
 
     get folderDirectRef() {
-        return this.#data['parent']
+        return this._data['parent']
     }
 
     get parts() {
-        return this.#data['parts']
+        return this._data['parts']
     }
 
     get received() {
-        return this.#data['received']
+        return this._data['received']
     }
 
     get unread() {
-        return !this.#data['seen']
+        return !this._data['seen']
     }
 }
 
 class ScalixMapiXml extends ScalixMessage {
 
+    _xmlDoc = null
+
     constructor(data = {}) {
-        super(data)
+        super(data);
+        this._fromXml(this._data['mapi_xml'])
     }
 
-    fromXml() {
-
+    _fromXml(xmlStr) {
+        if (!xmlStr) {
+            return;
+        }
+        if (window.DOMParser)
+        {
+            this._xmlDoc = new DOMParser().parseFromString(xmlStr, "text/xml");
+        }
+        else // Internet Explorer
+        {
+            this._xmlDoc = new ActiveXObject("Microsoft.XMLDOM");
+            this._xmlDoc.async = false;
+            this._xmlDoc.loadXML(xmlStr);
+        }
     }
 }
 
@@ -86,12 +103,23 @@ class CalendaringObject extends ScalixMapiXml {
 
 class ContactObject extends ScalixMapiXml {
 
+    _vcard = null;
+
     constructor(data = {}) {
         super(data)
+        this._fromVCard(this._data['davBody'])
     }
 
-    fromVCard() {
+    _getVcardSimpleProperty(propName) {
+        if (!this._vcard) {
+            return null;
+        }
+        const prop = this._vcard.get(propName);
+        return prop ? prop.valueOf() : null;
+    }
 
+    _fromVCard(vcardStr) {
+        this._vcard = new vCard().parse( vcardStr )
     }
 }
 
@@ -101,7 +129,7 @@ class Note extends ScalixMessage {
     }
 
     get messageClass() {
-        return ScalixMessageClass.NOTE;
+        return ScalixMessageClass.ScalixMessageClass.NOTE;
     }
 }
 
@@ -111,7 +139,7 @@ class Appointment extends CalendaringObject {
     }
 
     get messageClass() {
-        return ScalixMessageClass.APPOINTMENT;
+        return ScalixMessageClass.ScalixMessageClass.APPOINTMENT;
     }
 }
 
@@ -121,7 +149,7 @@ class MeetingRequest extends CalendaringObject {
     }
 
     get messageClass() {
-        return ScalixMessageClass.MEETING_REQUEST;
+        return ScalixMessageClass.ScalixMessageClass.MEETING_REQUEST;
     }
 }
 
@@ -132,7 +160,7 @@ class MeetingResponsePositive extends CalendaringObject {
     }
 
     get messageClass() {
-        return ScalixMessageClass.MEETING_RESPONSE_ACCEPT;
+        return ScalixMessageClass.ScalixMessageClass.MEETING_RESPONSE_ACCEPT;
     }
 }
 
@@ -143,7 +171,7 @@ class MeetingResponseNegative extends CalendaringObject {
     }
 
     get messageClass() {
-        return ScalixMessageClass.MEETING_RESPONSE_DECLINE;
+        return ScalixMessageClass.ScalixMessageClass.MEETING_RESPONSE_DECLINE;
     }
 }
 
@@ -154,7 +182,7 @@ class MeetingResponseTentative extends CalendaringObject {
     }
 
     get messageClass() {
-        return ScalixMessageClass.MEETING_RESPONSE_TENTATIVE;
+        return ScalixMessageClass.ScalixMessageClass.MEETING_RESPONSE_TENTATIVE;
     }
 }
 
@@ -165,7 +193,7 @@ class MeetingCancellation extends CalendaringObject {
     }
 
     get messageClass() {
-        return ScalixMessageClass.MEETING_CANCELED;
+        return ScalixMessageClass.ScalixMessageClass.MEETING_CANCELED;
     }
 }
 
@@ -176,7 +204,42 @@ class Contact extends ContactObject {
     }
 
     get messageClass() {
-        return ScalixMessageClass.CONTACT;
+        return ScalixMessageClass.ScalixMessageClass.CONTACT;
+    }
+
+    get formattedName() {
+        const fn = this._getVcardSimpleProperty('fn');
+        if (fn) {
+            return fn;
+        }
+        return null;
+    }
+
+    get telephone() {
+        const tel = this._getVcardSimpleProperty('tel');
+        if (tel) {
+            if (Array.isArray(tel)) {
+                return tel.map( i => i.valueOf())
+            }
+            return [tel];
+        }
+        return null;
+    }
+
+    get emails() {
+        const emails = this._getVcardSimpleProperty('email');
+        if (emails) {
+            if (Array.isArray(emails)) {
+                return emails.map( i => i.valueOf())
+            }
+            return [emails];
+        }
+        return null;
+    }
+
+
+    get organization() {
+        return this._getVcardSimpleProperty('org');
     }
 }
 
@@ -187,7 +250,7 @@ class Post extends ScalixMessage {
     }
 
     get messageClass() {
-        return ScalixMessageClass.POST;
+        return ScalixMessageClass.ScalixMessageClass.POST;
     }
 }
 
@@ -198,7 +261,7 @@ class Task extends CalendaringObject {
     }
 
     get messageClass() {
-        return ScalixMessageClass.TASK;
+        return ScalixMessageClass.ScalixMessageClass.TASK;
     }
 }
 
@@ -209,7 +272,7 @@ class DistributionList extends ContactObject {
     }
 
     get messageClass() {
-        return ScalixMessageClass.DISTRIBUTION_LIST;
+        return ScalixMessageClass.ScalixMessageClass.DISTRIBUTION_LIST;
     }
 }
 
@@ -220,7 +283,7 @@ class DeliveryFailure extends ScalixMessage {
     }
 
     get messageClass() {
-        return ScalixMessageClass.DELIVERY_FAILURE;
+        return ScalixMessageClass.ScalixMessageClass.DELIVERY_FAILURE;
     }
 }
 
@@ -231,7 +294,7 @@ class DeliveryReceipt extends ScalixMessage {
     }
 
     get messageClass() {
-        return ScalixMessageClass.DELIVERY_RECEIPT;
+        return ScalixMessageClass.ScalixMessageClass.DELIVERY_RECEIPT;
     }
 }
 
@@ -242,7 +305,7 @@ class ReadReceipt extends ScalixMessage {
     }
 
     get messageClass() {
-        return ScalixMessageClass.READ_RECEIPT;
+        return ScalixMessageClass.ScalixMessageClass.READ_RECEIPT;
     }
 }
 
@@ -251,46 +314,46 @@ function fromJsonObject(data = {}) {
         return new ScalixMessage(data)
     }
     switch (Symbol.for(data['type'])) {
-        case ScalixMessageClass.NOTE: {
+        case ScalixMessageClass.ScalixMessageClass.NOTE: {
             return new Note(data);
         }
-        case ScalixMessageClass.APPOINTMENT: {
+        case ScalixMessageClass.ScalixMessageClass.APPOINTMENT: {
             return new Appointment(data);
         }
-        case ScalixMessageClass.MEETING_REQUEST: {
+        case ScalixMessageClass.ScalixMessageClass.MEETING_REQUEST: {
             return new MeetingRequest(data);
         }
-        case ScalixMessageClass.MEETING_RESPONSE_ACCEPT: {
+        case ScalixMessageClass.ScalixMessageClass.MEETING_RESPONSE_ACCEPT: {
             return new MeetingResponsePositive(data);
         }
-        case ScalixMessageClass.MEETING_RESPONSE_DECLINE: {
+        case ScalixMessageClass.ScalixMessageClass.MEETING_RESPONSE_DECLINE: {
             return new MeetingResponseNegative(data);
         }
-        case ScalixMessageClass.MEETING_RESPONSE_TENTATIVE: {
-            return new ScalixMessageClass.MeetingResponseTentative(data);
+        case ScalixMessageClass.ScalixMessageClass.MEETING_RESPONSE_TENTATIVE: {
+            return new ScalixMessageClass.ScalixMessageClass.MeetingResponseTentative(data);
         }
-        case ScalixMessageClass.MEETING_CANCELED: {
+        case ScalixMessageClass.ScalixMessageClass.MEETING_CANCELED: {
             return new MeetingCancellation(data);
         }
-        case ScalixMessageClass.CONTACT: {
+        case ScalixMessageClass.ScalixMessageClass.CONTACT: {
             return new Contact(data);
         }
-        case ScalixMessageClass.POST: {
+        case ScalixMessageClass.ScalixMessageClass.POST: {
             return new Post(data);
         }
-        case ScalixMessageClass.TASK: {
+        case ScalixMessageClass.ScalixMessageClass.TASK: {
             return new Task(data);
         }
-        case ScalixMessageClass.DISTRIBUTION_LIST: {
+        case ScalixMessageClass.ScalixMessageClass.DISTRIBUTION_LIST: {
             return new DistributionList(data);
         }
-        case ScalixMessageClass.DELIVERY_FAILURE: {
+        case ScalixMessageClass.ScalixMessageClass.DELIVERY_FAILURE: {
             return new DeliveryFailure(data);
         }
-        case ScalixMessageClass.DELIVERY_RECEIPT: {
+        case ScalixMessageClass.ScalixMessageClass.DELIVERY_RECEIPT: {
             return new DeliveryReceipt(data);
         }
-        case ScalixMessageClass.READ_RECEIPT: {
+        case ScalixMessageClass.ScalixMessageClass.READ_RECEIPT: {
             return new ReadReceipt(data);
         }
         default: {
@@ -315,4 +378,5 @@ export default {
     MeetingResponseNegative,
     MeetingResponsePositive,
     MeetingRequest,
+    ContactObject
 }

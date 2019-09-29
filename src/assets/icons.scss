@@ -73,3 +73,7 @@ $fa-font-path: "../../node_modules/@fortawesome/fontawesome-free/webfonts";
 .horizontal-layout-icon {
   @extend .vertical-layout-icon, .fa-rotate-270;
 }
+
+.contact-icon {
+  @extend .far, .fa-id-card;
+}

@@ -1,7 +1,7 @@
 <script>
     import {FolderTypeEnum} from "@/_sxapi/Folder"
     import MailBoxLayout from "./MailBoxLayout"
-    import PeopleView from "./views/PeopleView"
+    import PeopleView from "./views/PeopleView/PeopleListView"
 
     export default {
         name: 'PeoplePage',
@@ -11,6 +11,7 @@
         },
         data: function () {
             return {
+                resetSelectedFolder: true,
                 showFolderType: FolderTypeEnum.Contacts,
                 currentTabName: "people",
             }

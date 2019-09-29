@@ -21,7 +21,7 @@
         },
 
         data() {
-            return {emails: []}
+            return {}
         },
 
         computed: {
@@ -32,17 +32,21 @@
 
             isLoading() {
                 return this.messagesLoadingStatus === 'loading'
+            },
+
+            emails() {
+                return this.$store.state.mailbox.currentFolder ? this.$store.state.mailbox.currentFolder.emails : {}
             }
 
         },
 
         watch: {
-            messagesLoadingStatus() {
+            /*messagesLoadingStatus() {
                 if (this.$store.state.mailbox.currentFolder) {
                     this.emails = this.$store.state.mailbox.currentFolder.emails;
                 }
-            },
-            
+            },*/
+
             currentFolder(val) {
                 if (val) {
                     this.$store.dispatch('mailbox/getCurrentFolderMessages', {from:0 , to:50});

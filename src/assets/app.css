@@ -8932,6 +8932,7 @@ input[type="color"].form-control:disabled {
 .folder-Calendar-icon,
 .folder-SentItems-icon,
 .folder-DeletedItems-icon,
+.contact-icon,
 .fal,
 .fad,
 .fab,
@@ -9040,6 +9041,7 @@ input[type="color"].form-control:disabled {
 .fa-pull-left.folder-Calendar-icon,
 .fa-pull-left.folder-SentItems-icon,
 .fa-pull-left.folder-DeletedItems-icon,
+.fa-pull-left.contact-icon,
 .fal.fa-pull-left,
 .fab.fa-pull-left,
 .fa-pull-left.folder-Drafts-icon {
@@ -9061,6 +9063,7 @@ input[type="color"].form-control:disabled {
 .fa-pull-right.folder-Calendar-icon,
 .fa-pull-right.folder-SentItems-icon,
 .fa-pull-right.folder-DeletedItems-icon,
+.fa-pull-right.contact-icon,
 .fal.fa-pull-right,
 .fab.fa-pull-right,
 .fa-pull-right.folder-Drafts-icon {
@@ -11141,7 +11144,7 @@ readers do not read off random characters that represent icons */
 .fa-id-badge:before {
   content: ""; }
 
-.fa-id-card:before {
+.fa-id-card:before, .contact-icon:before {
   content: ""; }
 
 .fa-id-card-alt:before {
@@ -13397,7 +13400,7 @@ readers do not read off random characters that represent icons */
   src: url("../../node_modules/@fortawesome/fontawesome-free/webfonts/fa-regular-400.eot?#iefix") format("embedded-opentype"), url("../../node_modules/@fortawesome/fontawesome-free/webfonts/fa-regular-400.woff2") format("woff2"), url("../../node_modules/@fortawesome/fontawesome-free/webfonts/fa-regular-400.woff") format("woff"), url("../../node_modules/@fortawesome/fontawesome-free/webfonts/fa-regular-400.ttf") format("truetype"), url("../../node_modules/@fortawesome/fontawesome-free/webfonts/fa-regular-400.svg#fontawesome") format("svg"); }
 .far, .calendar-icon,
 .folder-IPF-Appointment-icon,
-.folder-Calendar-icon, .folder-SentItems-icon, .folder-DeletedItems-icon {
+.folder-Calendar-icon, .folder-SentItems-icon, .folder-DeletedItems-icon, .contact-icon {
   font-family: 'Font Awesome 5 Free';
   font-weight: 400; }
 
