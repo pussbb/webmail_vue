@@ -1,13 +1,11 @@
 <template>
-    <div id="emails">
-        <ul v-if="emails.length !== 0">
-            <EmailItem :item="email" :key="email.uid" v-for="email in emails"/>
-        </ul>
-        <ul v-else>
-            <li class="loading" v-show="messagesLoadingStatus === 'loading'">
+    <div id="emails" @scroll.passive='handleScroll'>
+        <ul>
+            <EmailItem :item="email" :key="directref" v-for="(email, directref) of emails"/>
+            <li class="loading" v-show="isLoading">
                 <b-spinner class="mx-auto" label="Loading..."></b-spinner>
             </li>
-            <li v-show="messagesLoadingStatus !== 'loading'">There are no messages in that mailbox.</li>
+            <li v-show="(isLoading !== true && isEmptyFolder)">There are no messages in that mailbox.</li>
         </ul>
     </div>
 </template>
@@ -27,7 +25,14 @@
         },
 
         computed: {
-            ...mapState('mailbox', ['currentFolder', 'messagesLoadingStatus']),
+            ...mapState('mailbox', ['currentFolder', 'messagesLoadingStatus', 'messageLoadedCount']),
+            isEmptyFolder() {
+                return this.messageLoadedCount <= 0;
+            },
+
+            isLoading() {
+                return this.messagesLoadingStatus === 'loading'
+            }
 
         },
 
@@ -37,9 +42,23 @@
                     this.emails = this.$store.state.mailbox.currentFolder.emails;
                 }
             },
+            
             currentFolder(val) {
                 if (val) {
-                    this.$store.dispatch('mailbox/getCurrentFolderMessages');
+                    this.$store.dispatch('mailbox/getCurrentFolderMessages', {from:0 , to:50});
+                }
+            },
+
+        },
+
+        methods: {
+            handleScroll() {
+                if (
+                    this.$el.scrollTop == (this.$el.scrollHeight - this.$el.offsetHeight)
+                    && (this.currentFolder && this.currentFolder.hasMore)
+                    && !this.isLoading
+                ) {
+                    this.$store.dispatch('mailbox/getCurrentFolderMessages', {from:this.currentFolder.emailsLoadedCount , to:50});
                 }
             }
         }

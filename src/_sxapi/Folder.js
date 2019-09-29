@@ -127,7 +127,7 @@ export class ScalixFolder {
 
     #data = {};
     #parent = null;
-    #emails = []
+    #emails = {}
 
     constructor(data={}) {
         this.#data = data;
@@ -223,6 +223,18 @@ export class ScalixFolder {
     }
 
     set emails(emails) {
-        this.#emails = emails;
+        emails.forEach( email => this.#emails[email.directRef] = email)
+    }
+
+    get emailsLoadedCount() {
+        return Object.keys(this.#emails).length
+    }
+
+    get hasMore() {
+        return this.total > this.emailsLoadedCount
+    }
+
+    clearEmails() {
+        this.#emails = {}
     }
 }

@@ -12,6 +12,7 @@
                 <b-embed
                         :srcDoc="htmlPart.body"
                         type="iframe"
+                        sandbox
                 ></b-embed>
             </div>
             <div v-else-if="textPart">
