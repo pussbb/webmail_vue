@@ -39,6 +39,11 @@
                 <em v-for="(item, index) of email.cc" :key="index">{{item.name || item.address}}, </em>
             </p>
             <p class="email-header-row" v-show="email.received">Received: {{email.received}} </p>
+            <b-list-group horizontal v-if="email.hasAttachment">
+                <b-list-group-item @click.prevent="downloadAttach(attach)" :key="email.directRef+'-attach-'+index" v-for="(attach, index) of email.attachments">
+                    <i class="fas fa-paperclip"></i> {{ attach['fname'] || 'Unknown'}}
+                </b-list-group-item>
+            </b-list-group>
             <hr>
             <div v-if="htmlPart">
                 <b-embed
@@ -79,7 +84,8 @@
             }
         },
         computed: {
-            ...mapGetters('mailbox', ['fetchEmail', 'currentFolderDref', 'fetchEmailRfC822', 'fetchEmailHeaders']),
+            ...mapGetters('mailbox', ['fetchEmail', 'currentFolderDref', 'fetchEmailRfC822',
+                'fetchEmailHeaders', 'fetchEmailPart']),
             textPart() {
                 if (!this.email) {
                     return null;
@@ -95,6 +101,22 @@
         },
 
         methods: {
+            downloadAttach(attach) {
+                if (!this.email) {
+                    return;
+                }
+                this.fetchEmailPart(this.email.directRef, attach.spec)
+                    .then(data => {
+                        // window.open("data:message/rfc822,"+encodeURIComponent(data), `${this.email.directRef}.eml`);
+                        const a = document.createElement('a');
+                        a.href = "data:"+attach.ct+","+encodeURIComponent(data);
+                        a.download = attach.fname || 'unknown';
+                        a.click();
+                    })
+                    .catch(err => {
+                        this.$store.dispatch('notification/addError', `Failed to download attachment. Reason: ${err}`)
+                    })
+            },
             showHeaders() {
                 if (!this.email) {
                     return;
@@ -201,5 +223,8 @@
     }
     .email-header-row {
         margin: 0 0 0 0;
+    }
+    .list-group-item {
+        cursor: pointer;
     }
 </style>

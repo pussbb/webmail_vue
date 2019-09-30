@@ -70,7 +70,18 @@ class ScalixMessage {
     }
 
     get parts() {
-        return this._data['parts']
+        return this._data['parts'] || []
+    }
+
+    get attachments() {
+        return this.parts.filter( i => {
+            if (i['fname']
+                || i['attachment'] === 'attachment'
+                || i['ct'] === 'message/rfc822') {
+                return true;
+            }
+            return false;
+        })
     }
 
     get received() {
@@ -79,6 +90,10 @@ class ScalixMessage {
 
     get unread() {
         return !this._data['seen']
+    }
+
+    get hasAttachment() {
+        return ( (this._data['flags']||0) & ScalixMessageClass.MessageFlagEnum.ATTACH ) != 0
     }
 }
 

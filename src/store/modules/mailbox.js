@@ -35,7 +35,17 @@ const getters = {
                 .catch(err => reject(err))
         });
     },
-
+    fetchEmailPart: state => (msgDref, partId) => {
+        return new Promise((resolve, reject) => {
+            if (!state.currentFolder) {
+                reject('select folder')
+            }
+            client
+                .fetchEmailPart(state.currentFolder.directRef, msgDref, partId)
+                .then(data =>  resolve(data))
+                .catch(err => reject(err))
+        });
+    },
     fetchEmailHeaders: state => msgDref => {
         return new Promise((resolve, reject) => {
             if (!state.currentFolder) {

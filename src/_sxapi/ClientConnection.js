@@ -110,7 +110,7 @@ export default class ClientConnection {
 
         return new Promise((resolve, reject) => {
             this._instance
-                .get(url, config)
+                .get(url)
                 .then(resp => {
                     resolve(resp.data);
                 })
@@ -118,13 +118,25 @@ export default class ClientConnection {
         });
     }
 
+    fetchEmailPart(folder, msgDref, part) {
+        const url = `${this._folder_url(folder)}/${msgDref}/${part}`;
+
+        return new Promise((resolve, reject) => {
+            this._instance
+                .get(url)
+                .then(resp => {
+                    resolve(resp.data);
+                })
+                .catch(err => reject(err));
+        });
+    }
 
     fetchEmailHeaders(folder, msgDref) {
         const url = `${this._folder_url(folder)}/${msgDref}/headers`;
 
         return new Promise((resolve, reject) => {
             this._instance
-                .get(url, config)
+                .get(url)
                 .then(resp => {
                     resolve(resp.data);
                 })

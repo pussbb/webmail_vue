@@ -13,19 +13,25 @@ const  MessageSensitivityEnum = Object.freeze({
 });
 
 const  MessageFlagEnum = Object.freeze({
-    NONE      : 0x00000000,
-    ANSWERED  : 0x00001000,
-    DELETED   : 0x00002000,
-    DRAFT     : 0x00004000,
-    FLAGGED   : 0x00008000,
+    NONE      : 0,
+    ANSWERED  : 8,
+    DELETED   : 1,
+    DRAFT     : 128,
+    FLAGGED   : 4,
     RECENT    : 0x00010000,
-    SEEN      : 0x00020000,
-    ATTACH    : 0x00040000,
-    FORWARDED : 0x00080000,
-    XOWNER    : 0x00100000,
-    XPROCESSED: 0x00200000,
-    JUNK      : 0x01000000,
-    NONJUNK   : 0x02000000
+    SEEN      : 2,
+    ATTACH    : 16,
+    FORWARDED : 256,
+    XOWNER    : 512,
+    XPROCESSED: 65536,
+    JUNK      : 32,
+    NONJUNK   : 64,
+    MDNSENT   : 1024,
+    LABEL1: 2048,
+    LABEL2: 4096,
+    LABEL3: 8192,
+    LABEL4: 16384,
+    LABEL5: 32768
 });
 
 const  AddressTypeEnum = Object.freeze({
