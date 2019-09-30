@@ -40,22 +40,35 @@
             </p>
             <p class="email-header-row" v-show="email.received">Received: {{email.received}} </p>
             <b-list-group horizontal v-if="email.hasAttachment">
-                <b-list-group-item @click.prevent="downloadAttach(attach)" :key="email.directRef+'-attach-'+index" v-for="(attach, index) of email.attachments">
+                <b-list-group-item  class="unselectable"  @click.prevent="downloadAttach(attach)" :key="email.directRef+'-attach-'+index" v-for="(attach, index) of email.attachments">
                     <i class="fas fa-paperclip"></i> {{ attach['fname'] || 'Unknown'}}
                 </b-list-group-item>
             </b-list-group>
             <hr>
             <div v-if="htmlPart">
+                <a @click.prevent="showExternalImages">
+                    <b-alert
+                        class="unselectable"
+                        v-show="htmlPart.hasBlockedImages"
+                        show
+                        variant="warning">
+                        Show external images
+                    </b-alert>
+                </a>
                 <b-embed
-                        :srcDoc="htmlPart"
+                        :srcDoc="htmlPart.body"
                         type="iframe"
                         sandbox
                 ></b-embed>
             </div>
             <div v-else-if="textPart">
-                <pre>
-                    {{textPart}}
-                </pre>
+
+                    <b-embed
+                            :srcDoc="textPart"
+                            type="iframe"
+                            sandbox
+                    ></b-embed>
+
             </div>
             <div v-else>
                 <b> Message Body empty</b>
@@ -71,6 +84,7 @@
 <script>
     import {mapGetters} from 'vuex'
     import {decodePartBody} from "@/helpers/mime"
+    import {textToHtml, cleanHtml} from "@/helpers/renderer";
 
     export default {
         name: 'email-view',
@@ -80,6 +94,7 @@
                 loading: false,
                 error: false,
                 headers: null,
+                blockExternalImages: true,
                 modalTitle: ''
             }
         },
@@ -90,21 +105,33 @@
                 if (!this.email) {
                     return null;
                 }
-                return decodePartBody(this.email.parts.filter(i => i.ct === 'text/plain')[0]);
+                const part = this.email.parts.filter(i => i.ct === 'text/plain')[0];
+                if (!part) {
+                    return null;
+                }
+                return textToHtml(decodePartBody(part), part.ct);
             },
             htmlPart() {
                 if (!this.email) {
                     return null;
                 }
-                return decodePartBody(this.email.parts.filter(i => i.ct === 'text/html')[0]);
+                const part = (this.email.parts.filter(i => i.ct === 'text/html')[0]);
+                if (!part) {
+                    return null;
+                }
+                return cleanHtml(decodePartBody(part), this.blockExternalImages);
             }
         },
 
         methods: {
+            showExternalImages() {
+                this.blockExternalImages = false;
+            },
             downloadAttach(attach) {
                 if (!this.email) {
                     return;
                 }
+                this.$store.dispatch('notification/addInfo', 'Download of attachment will start soon, please wait.')
                 this.fetchEmailPart(this.email.directRef, attach.spec)
                     .then(data => {
                         // window.open("data:message/rfc822,"+encodeURIComponent(data), `${this.email.directRef}.eml`);
@@ -149,19 +176,21 @@
                 if (!this.email) {
                     return;
                 }
+                this.$store.dispatch('notification/addInfo', 'Download of email will start soon please wait.')
                 this.fetchEmailRfC822(this.email.directRef)
                     .then(data => {
-                       // window.open("data:message/rfc822,"+encodeURIComponent(data), `${this.email.directRef}.eml`);
                         const a = document.createElement('a');
                         a.href = "data:message/rfc822,"+encodeURIComponent(data);
                         a.download = `${this.email.directRef}.eml`;
                         a.click();
+
                     })
                     .catch(err => {
                         this.$store.dispatch('notification/addError', `Failed to download email. Reason: ${err}`)
                     })
             },
             loadEmail(msgdref) {
+                this.blockExternalImages = true
                 if (!msgdref) {
                     this.item = '';
                     return
@@ -169,6 +198,7 @@
                 const folderDref = this.currentFolderDref;
                 this.loading = true
                 this.error = false
+
                 this.fetchEmail(msgdref)
                     .then(data => {
                         if (folderDref === this.currentFolderDref) {
@@ -225,6 +255,9 @@
         margin: 0 0 0 0;
     }
     .list-group-item {
+        cursor: pointer;
+    }
+    .alert {
         cursor: pointer;
     }
 </style>
