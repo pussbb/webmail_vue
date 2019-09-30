@@ -16,7 +16,6 @@ export default {
     ...mapState('account', ['user']),
   },
 
-
 }
 
 </script>
