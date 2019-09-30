@@ -150,6 +150,10 @@
                 this.fetchEmail(msgdref)
                     .then(data => {
                         if (folderDref === this.currentFolderDref) {
+                            if (data.length <= 0) {
+                                this.error = true;
+                                this.$store.dispatch('notification/addWarning', 'Failed to load message. It can be deleted.')
+                            }
                             this.email = data[0]
                         } else {
                             this.$store.dispatch('notification/addWarning', 'FolderChanged')
