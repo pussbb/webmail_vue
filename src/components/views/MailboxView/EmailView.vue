@@ -1,23 +1,55 @@
 <template>
     <div id="message-view">
         <div v-if="email">
-            <p v-show="email.subject">Subject: {{email.subject}} </p>
-            <p v-show="email.from">From: {{email.from}} </p>
-            <p v-show="email.bcc">BCC: {{email.bcc}} </p>
-            <p v-show="email.cc">CC: {{email.cc}} </p>
-            <p v-show="email.received">CC: {{email.received}} </p>
+            <b-modal
+                    id="modal-headers"
+                    ref="modalHeaders"
+                    size="lg"
+                    scrollable
+                    :title="modalTitle"
+                    hide-footer >
+                        <pre>{{headers}}</pre>
+            </b-modal>
+            <div>
+                <b-button-group class="mt-3">
+                    <b-button><i class="fas fa-reply"></i> Relply</b-button>
+                    <b-button><i class="fas fa-reply-all"></i> Reply All</b-button>
+                    <b-button><i class="fas fa-share"></i> Forward</b-button>
+                    <b-button><i class="far fa-trash-alt"></i> Delete</b-button>
+                    <b-dropdown right text="More ">
+                        <b-dropdown-item @click="downloadEmail"><i class="fas fa-download"></i> Download</b-dropdown-item>
+                        <b-dropdown-divider ></b-dropdown-divider>
+                        <b-dropdown-item @click="showHeaders">View Headers</b-dropdown-item>
+                        <b-dropdown-item @click="showSource">View Source</b-dropdown-item>
+                    </b-dropdown>
 
+                </b-button-group>
+            </div>
+            <p class="email-header-row" v-show="email.subject">Subject: {{email.subject}} </p>
+            <p class="email-header-row" v-show="email.from">From:
+                <em v-for="(item, index) of email.from" :key="index">{{item.name || item.address}}, </em>
+            </p>
+            <p class="email-header-row" v-show="email.to">To:
+                <em v-for="(item, index) of email.to" :key="index">{{item.name || item.address}}, </em>
+            </p>
+            <p class="email-header-row" v-show="email.bcc">BCC:
+                <em v-for="(item, index) of email.bcc" :key="index">{{item.name || item.address}}, </em>
+            </p>
+            <p class="email-header-row" v-show="email.cc">CC:
+                <em v-for="(item, index) of email.cc" :key="index">{{item.name || item.address}}, </em>
+            </p>
+            <p class="email-header-row" v-show="email.received">Received: {{email.received}} </p>
             <hr>
             <div v-if="htmlPart">
                 <b-embed
-                        :srcDoc="htmlPart.body"
+                        :srcDoc="htmlPart"
                         type="iframe"
                         sandbox
                 ></b-embed>
             </div>
             <div v-else-if="textPart">
                 <pre>
-                    {{textPart.body}}
+                    {{textPart}}
                 </pre>
             </div>
             <div v-else>
@@ -33,6 +65,7 @@
 </template>
 <script>
     import {mapGetters} from 'vuex'
+    import {decodePartBody} from "@/helpers/mime"
 
     export default {
         name: 'email-view',
@@ -40,26 +73,72 @@
             return {
                 email: null,
                 loading: false,
-                error: false
+                error: false,
+                headers: null,
+                modalTitle: ''
             }
         },
         computed: {
-            ...mapGetters('mailbox', ['fetchEmail', 'currentFolderDref']),
+            ...mapGetters('mailbox', ['fetchEmail', 'currentFolderDref', 'fetchEmailRfC822', 'fetchEmailHeaders']),
             textPart() {
                 if (!this.email) {
                     return null;
                 }
-                return this.email.parts.filter(i => i.ct === 'text/plain')[0]
+                return decodePartBody(this.email.parts.filter(i => i.ct === 'text/plain')[0]);
             },
             htmlPart() {
                 if (!this.email) {
                     return null;
                 }
-                return this.email.parts.filter(i => i.ct === 'text/html')[0]
+                return decodePartBody(this.email.parts.filter(i => i.ct === 'text/html')[0]);
             }
         },
 
         methods: {
+            showHeaders() {
+                if (!this.email) {
+                    return;
+                }
+                this.fetchEmailHeaders(this.email.directRef)
+                    .then(data => {
+                        this.modalTitle = 'Email Headers'
+                        this.headers = data;
+                        this.$refs.modalHeaders.show()
+                    })
+                    .catch(err => {
+                        this.$store.dispatch('notification/addError', `Failed to download email. Reason: ${err}`)
+                    })
+            },
+            showSource() {
+                if (!this.email) {
+                    return;
+                }
+                this.fetchEmailRfC822(this.email.directRef)
+                    .then(data => {
+                        this.modalTitle = 'Email Source'
+                        this.headers = data;
+                        this.$refs.modalHeaders.show()
+                    })
+                    .catch(err => {
+                        this.$store.dispatch('notification/addError', `Failed to download email. Reason: ${err}`)
+                    })
+            },
+            downloadEmail() {
+                if (!this.email) {
+                    return;
+                }
+                this.fetchEmailRfC822(this.email.directRef)
+                    .then(data => {
+                       // window.open("data:message/rfc822,"+encodeURIComponent(data), `${this.email.directRef}.eml`);
+                        const a = document.createElement('a');
+                        a.href = "data:message/rfc822,"+encodeURIComponent(data);
+                        a.download = `${this.email.directRef}.eml`;
+                        a.click();
+                    })
+                    .catch(err => {
+                        this.$store.dispatch('notification/addError', `Failed to download email. Reason: ${err}`)
+                    })
+            },
             loadEmail(msgdref) {
                 if (!msgdref) {
                     this.item = '';
@@ -115,5 +194,8 @@
         text-align: left;
         max-width: 35vw;
         overflow: auto;
+    }
+    .email-header-row {
+        margin: 0 0 0 0;
     }
 </style>

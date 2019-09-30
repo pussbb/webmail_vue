@@ -104,4 +104,31 @@ export default class ClientConnection {
                 .catch(err => reject(err));
         });
     }
+
+    fetchEmailRfC822(folder, msgDref) {
+        const url = `${this._folder_url(folder)}/${msgDref}/rfc822`;
+
+        return new Promise((resolve, reject) => {
+            this._instance
+                .get(url, config)
+                .then(resp => {
+                    resolve(resp.data);
+                })
+                .catch(err => reject(err));
+        });
+    }
+
+
+    fetchEmailHeaders(folder, msgDref) {
+        const url = `${this._folder_url(folder)}/${msgDref}/headers`;
+
+        return new Promise((resolve, reject) => {
+            this._instance
+                .get(url, config)
+                .then(resp => {
+                    resolve(resp.data);
+                })
+                .catch(err => reject(err));
+        });
+    }
 }

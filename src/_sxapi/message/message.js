@@ -2,13 +2,31 @@
 import ScalixMessageClass from "./constants"
 import vCard from "vcf"
 import ICAL from "ical.js"
+import parse from "emailjs-addressparser"
+import {mimeWordDecode} from "emailjs-mime-codec"
 
 class ScalixMessage {
 
     _data = {}
 
     constructor(data = {}) {
-        this._data = data
+        this._data = data;
+
+        ['to', 'bcc', 'cc', 'from', 'replyTo'].forEach(this._parseEmailsAddresses, this)
+        if (this._data['subject']) {
+            this._data['subject'] = mimeWordDecode(this._data['subject']);
+        }
+    }
+
+    _parseEmailsAddresses(key) {
+        const val = this._data[key];
+        if (val) {
+            this._data[key] = [];
+            parse(val).forEach( i => {
+                const {name, address} = i
+                this._data[key].push({name: mimeWordDecode(name?name:''), address})
+            }, this)
+        }
     }
 
     get messageClass() {

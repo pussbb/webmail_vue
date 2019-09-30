@@ -22,7 +22,30 @@ const getters = {
                 .then(data =>  resolve(data))
                 .catch(err => reject(err))
         });
+    },
 
+    fetchEmailRfC822: state => msgDref => {
+        return new Promise((resolve, reject) => {
+            if (!state.currentFolder) {
+                reject('select folder')
+            }
+            client
+                .fetchEmailRfC822(state.currentFolder.directRef, msgDref)
+                .then(data =>  resolve(data))
+                .catch(err => reject(err))
+        });
+    },
+
+    fetchEmailHeaders: state => msgDref => {
+        return new Promise((resolve, reject) => {
+            if (!state.currentFolder) {
+                reject('select folder')
+            }
+            client
+                .fetchEmailHeaders(state.currentFolder.directRef, msgDref)
+                .then(data =>  resolve(data))
+                .catch(err => reject(err))
+        });
     },
 
     findFolder: state => folderDref => {

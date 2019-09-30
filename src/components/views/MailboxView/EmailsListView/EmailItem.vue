@@ -6,12 +6,15 @@
         draggable="true"
         @dragover.prevent
         @dragstart="onDragStart">
-        From: {{item.from}} <br>
+        <span v-show="item.from && item.from.length > 0">From:
+            <em v-for="(item, index) of item.from" :key="index">{{item.name || item.address}}</em>
+        </span><br>
         {{item.subject}}
     </li>
 </template>
 <script>
     import {createDragImage} from "@/helpers/dnd";
+
 
     export default {
         props: {

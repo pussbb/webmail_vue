@@ -17,7 +17,7 @@ const getters = {
 }
 
 const actions = {
-    login({ commit }, { username, password }) {
+    login({ dispatch, commit }, { username, password }) {
         commit('auth_request')
 
         client.login(username, password)
@@ -27,7 +27,7 @@ const actions = {
                 }
             ).catch( err => {
                 commit('auth_error');
-                console.log(err)
+                dispatch('notification/addError', err, { root: true })
                 //throw err;
             });
     },
@@ -48,6 +48,7 @@ const mutations = {
         state.status = 'success'
         state.user = user
     },
+
 
     auth_error(state){
         state.status = 'error'
