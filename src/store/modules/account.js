@@ -5,7 +5,7 @@ import {isNull} from "bootstrap-vue/esm/utils/inspect";
 
 
 const state = {
-    status: '',
+    status: 'idle',
     user: null
 }
 
@@ -41,17 +41,17 @@ const actions = {
 
 const mutations = {
     auth_request(state){
-        state.status = 'loading'
+        state.status = 'loading';
     },
 
     auth_success(state, user){
-        state.status = 'success'
-        state.user = user
+        state.status = 'success';
+        state.user = user;
     },
 
-
     auth_error(state){
-        state.status = 'error'
+        state.user = null;
+        state.status = 'error';
     },
 
     logout(state){

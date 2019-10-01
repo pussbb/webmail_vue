@@ -1,5 +1,5 @@
 <template>
-    <div v-once>
+    <div>
         <form @submit.prevent="handleSubmit" class="form-signin rounded border">
             <div class="text-center mb-4">
                 <h1 class="h3 mb-3 font-weight-normal">Sign In {{authStatus}}</h1>
