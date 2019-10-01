@@ -1,9 +1,12 @@
+/* eslint-disable no-useless-escape */
+
 const textToHtmlElemReplaceItems = [
     [new RegExp( "&", "g" ), "&amp;"],
     [new RegExp( "<", "g" ), "&lt;" ],
     [new RegExp( ">", "g" ), "&gt;" ],
 
 ];
+
 const parseURLsItemsReplace = [
     [ /((ftp|https?):\/\/[^\s|\)|\]|\}]+)/ig, "$1".link("$1") ],
     [ /\s(www\.(\w+\.)+[^\s|\)|\]|\}]+)/ig, " "+("$1".link("http://$1")) ],

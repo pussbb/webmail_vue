@@ -12,7 +12,7 @@ Vue.config.productionTip = true
 //Vue.config.performance = true;
 Vue.config.errorHandler = function(err, vm, info) {
   store.dispatch('notification/addError', `${err} ${info}`)
-  console.log(`Error: ${err.toString()}\nInfo: ${info} ${vm}`);
+  console.error(info, err)
 }
 
 new Vue({

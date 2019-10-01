@@ -2,8 +2,8 @@
     <div v-once>
         <form @submit.prevent="handleSubmit" class="form-signin rounded border">
             <div class="text-center mb-4">
-                <h1 class="h3 mb-3 font-weight-normal">Sign In</h1>
-                <b-alert show v-show="authStatus === 'error'" variant="danger">Username or password invalid</b-alert>
+                <h1 class="h3 mb-3 font-weight-normal">Sign In {{authStatus}}</h1>
+                <b-alert show v-show="this.authStatus === 'error'" variant="danger">Username or password invalid</b-alert>
             </div>
 
             <div class="form-label-group">
@@ -72,8 +72,7 @@
         },
 
         watch: {
-            // eslint-disable-next-line no-unused-vars
-            authStatus(newValue, oldValue) {
+            authStatus(newValue) {
                 if (newValue === 'success') {
                     this.$store.dispatch('notification/addSuccess', 'You are logged in successfully!.')
                     this.$router.push("/");

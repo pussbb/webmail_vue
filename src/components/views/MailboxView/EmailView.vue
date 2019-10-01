@@ -83,7 +83,7 @@
 </template>
 <script>
     import {mapGetters} from 'vuex'
-    import {decodePartBody} from "@/helpers/mime"
+    import {decodeBodyPart} from "@/helpers/mime"
     import {textToHtml, cleanHtml} from "@/helpers/renderer";
 
     export default {
@@ -105,21 +105,21 @@
                 if (!this.email) {
                     return null;
                 }
-                const part = this.email.parts.filter(i => i.ct === 'text/plain')[0];
+                const part = this.email.parts.filter(i => i.ct === 'text/plain' && i.size > 0)[0];
                 if (!part) {
                     return null;
                 }
-                return textToHtml(decodePartBody(part), part.ct);
+                return textToHtml(decodeBodyPart(part), part.ct);
             },
             htmlPart() {
                 if (!this.email) {
                     return null;
                 }
-                const part = (this.email.parts.filter(i => i.ct === 'text/html')[0]);
+                const part = (this.email.parts.filter(i => i.ct === 'text/html' && i.size > 0)[0]);
                 if (!part) {
                     return null;
                 }
-                return cleanHtml(decodePartBody(part), this.blockExternalImages);
+                return cleanHtml(decodeBodyPart(part), this.blockExternalImages);
             }
         },
 
