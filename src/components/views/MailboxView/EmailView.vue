@@ -134,9 +134,8 @@
                 this.$store.dispatch('notification/addInfo', 'Download of attachment will start soon, please wait.')
                 this.fetchEmailPart(this.email.directRef, attach.spec)
                     .then(data => {
-                        // window.open("data:message/rfc822,"+encodeURIComponent(data), `${this.email.directRef}.eml`);
                         const a = document.createElement('a');
-                        a.href = "data:"+attach.ct+","+encodeURIComponent(data);
+                        a.href = `data:${attach.ct};${attach.enc},${encodeURIComponent(data)}`;
                         a.download = attach.fname || 'unknown';
                         a.click();
                     })
