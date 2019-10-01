@@ -262,7 +262,7 @@ class Contact extends ContactObject {
             }
             return [tel];
         }
-        return null;
+        return [];
     }
 
     get emails() {
@@ -273,7 +273,7 @@ class Contact extends ContactObject {
             }
             return [emails];
         }
-        return null;
+        return [];
     }
 
 
