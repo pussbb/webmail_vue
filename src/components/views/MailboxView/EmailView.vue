@@ -39,11 +39,11 @@
                 <em v-for="(item, index) of email.cc" :key="index">{{item.name || item.address}}, </em>
             </p>
             <p class="email-header-row" v-show="email.received">Received: {{email.received}} </p>
-            <b-list-group horizontal v-if="email.hasAttachment">
-                <b-list-group-item  class="unselectable"  @click.prevent="downloadAttach(attach)" :key="email.directRef+'-attach-'+index" v-for="(attach, index) of email.attachments">
+            <ul class="list-inline" v-if="email.hasAttachment">
+                <li  class="list-inline-item unselectable"  @click.prevent="downloadAttach(attach)" :key="email.directRef+'-attach-'+index" v-for="(attach, index) of email.attachments">
                     <i class="fas fa-paperclip"></i> {{ attach['fname'] || 'Unknown'}}
-                </b-list-group-item>
-            </b-list-group>
+                </li>
+            </ul>
             <hr>
             <div v-if="htmlPart">
                 <a @click.prevent="showExternalImages">
@@ -55,11 +55,14 @@
                         Show external images
                     </b-alert>
                 </a>
-                <b-embed
-                        :srcDoc="htmlPart.body"
-                        type="iframe"
-                        sandbox
-                ></b-embed>
+                <div class="embed-responsive embed-responsive-21by9">
+                    <iframe
+                            class="embed-responsive-item"
+                            :srcDoc="htmlPart.body"
+                            ref="htmlIframe"
+                            v-on:load="iframeOnload"
+                    ></iframe>
+                </div>
             </div>
             <div v-else-if="textPart">
 
@@ -84,7 +87,7 @@
 <script>
     import {mapGetters} from 'vuex'
     import {decodeBodyPart} from "@/helpers/mime"
-    import {textToHtml, cleanHtml} from "@/helpers/renderer";
+    import {textToHtml, cleanHtml, initIframeRules} from "@/helpers/renderer";
 
     export default {
         name: 'email-view',
@@ -124,6 +127,28 @@
         },
 
         methods: {
+            resolveCID(cid) {
+                return new Promise((resolve, reject) => {
+                    if (!this.email) {
+                        return reject('email not selected')
+                    }
+                    const attach = this.email.parts.filter( i => i.contentid && i.contentid.includes(cid))[0];
+                    if (!attach) {
+                        return reject(`Email part ${cid} not found`)
+                    }
+                    this.fetchEmailPart(this.email.directRef, attach.spec)
+                        .then(data => {
+                            resolve(`data:${attach.ct};${attach.enc},${data}`)
+                        })
+                        .catch(err => {
+                            this.$store.dispatch('notification/addError', `Failed to download attachment. Reason: ${err}`)
+                            reject(err)
+                        })
+                });
+            },
+            iframeOnload() {
+                initIframeRules.bind(this)(this.$refs.htmlIframe);
+            },
             showExternalImages() {
                 this.blockExternalImages = false;
             },
@@ -214,7 +239,7 @@
                     if (folderDref === this.currentFolderDref) {
                         this.error = true;
                     }
-                    this.$store.dispatch('notification/addErr', err)
+                    this.$store.dispatch('notification/addError', err)
                 }).finally(() => {
                     if (folderDref === this.currentFolderDref) {
                         this.loading = false
@@ -253,7 +278,7 @@
     .email-header-row {
         margin: 0 0 0 0;
     }
-    .list-group-item {
+    .list-inline-item {
         cursor: pointer;
     }
     .alert {

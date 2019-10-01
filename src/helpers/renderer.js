@@ -166,21 +166,45 @@ function disableIFrames( displayText = "" ) {
 
 const fixupContentIdsPattern =  /(src\s*=\s*|background\s*=\s*|background-image\s*:\s*url\s*\(\s*)['"]?\s*cid:([a-z0-9:\-_\$\?&%=@\/\.;]+)\s*['"]?(\s*\)\s*;?)?/i;
 
-function fixupContentIds( displayText = "") {
-    if (!displayText) {
-        return displayText;
+
+export function fixupContentIds( cleanHtml = "", cidResolver) {
+    if (!cleanHtml) {
+        return cleanHtml;
     }
-    let match;
-    while ( ( match = fixupContentIdsPattern.exec(displayText) ) != null ) {
+
+    let resolvers = [];
+    Array.from(cleanHtml.body.matchAll(fixupContentIdsPattern)).forEach( match => {
+        resolvers.push(
+            new Promise((resolve, reject) => {
+                cidResolver(match[2])
+                    .then(data => {
+                        cleanHtml.body = cleanHtml.body.replace(match[0].trim(' '), `${match[1]}"${data}"${match[3]||""}`)
+                    })
+                    .catch( err => reject(err))
+            })
+        );
+    })
+   /* while ( ( match = fixupContentIdsPattern.exec(cleanHtml.body) ) != null ) {
+        delete match.input
         // Legend:
         // match[0] is the whole match
         // match[1] is either src= or background= or background-image:url(
         // match[2] is the actual content-id
         // match[3] may be ); in the case of a background-image
-
+        console.log(match)
         ///displayText = displayText.replace( match[0], match[1] + match[3] );
-    }
-    return displayText;
+    }*/
+
+    /* (async () => {
+        await Promise.all(resolvers).then(items => {
+            items.forEach(i => {
+                const {match, data} = i;
+                cleanHtml.body = cleanHtml.body.replace(match[0].trim(' '), `${match[1]}"${data}"${match[3]||""}`)
+                console.log(cleanHtml.body)
+            })
+        }).catch(err => console.log(err));
+    })()*/
+    return cleanHtml;
 }
 
 const removeExternalImagesPattern = /<([a-z][a-z0-9]*\s+[^>]*)(src\s*=\s*|background\s*=\s*|background-image\s*:\s*url\s*\(\s*)(['"]?)\s*([a-zA-Z0-9:\-_\$\?&%=@\/\.;]+)\s*(['"]?)/ig;
@@ -247,14 +271,70 @@ function removeExternalImages( displayText = "" ) {
         // match[4] is the url
         // match[5] is the ending quote
 
-        //let url = match[4].toLowerCase();
-        //if ( !url.startsWith( "cid:" ) ) {
+        //let url = ;
+        if ( !match[4].toLowerCase().startsWith( "cid:" ) ) {
             str = match[1] + match[5];
             displayText = displayText.replace( match[0], str );
             removeExternalImagesPattern2.lastIndex = 0;
             count++;
-        //}
+        }
     }
 
     return [ displayText, count ];
+}
+
+
+async function loadInlineImages(doc) {
+    Array.from(doc.getElementsByTagName("img")).forEach( link => {
+        if (link.src && link.src.startsWith("cid:")) {
+            const cid = link.src.replace("cid:", "");
+            link.src = ""
+            this.resolveCID(cid)
+                .then( data => link.src = data)
+                .catch( error => {
+                    this.$store.dispatch('notification/addError', `Failed to fetch inline image ${cid}. Reason: ${error}`)
+                })
+        }
+    });
+}
+
+async function fixIframeLinks(doc) {
+    Array.from(doc.getElementsByTagName("a")).forEach( link => {
+        link.setAttribute('rel', 'noopener noreferrer');
+        link.setAttribute('target', '_blank');
+        const href = link.getAttribute('href');
+        Array.from(link.attributes).forEach( attr => {
+            if (attr.name.startsWith('on')) {
+                link.removeAttribute(attr.name);
+            }
+        });
+        if (!href.startsWith("#")) {
+            link.onclick = (e) => {
+                e.preventDefault();
+                e.stopImmediatePropagation();
+                try {
+                    window.open(link.href, '', 'location=yes, menubar=yes, resizable=yes, scrollbars=yes, status=yes, titlebar=yes, toolbar=yes')
+                } catch (e) {
+                    e;
+                }
+
+            }
+        }
+    });
+}
+
+async function fixIframeForm(doc) {
+    Array.from(doc.getElementsByTagName( "form" )).forEach( form => {
+        form.setAttribute( "target", "_blank" );
+        form.setAttribute('rel', 'noopener noreferrer');
+    });
+}
+export function initIframeRules(iframe) {
+    const doc = iframe.contentWindow.document;
+    Promise.all([
+        loadInlineImages.bind(this)(doc),
+        fixIframeLinks.bind(this)(doc),
+        fixIframeForm.bind(this)(doc)]
+    ).catch(err => err)
+
 }

@@ -2,7 +2,6 @@
 import {quotedPrintableDecode, base64Decode, mimeWordsDecode} from "emailjs-mime-codec"
 import {imapDecode } from 'emailjs-utf7'
 
-
 export function decodeBodyPart(part) {
 
     if (!part) {
