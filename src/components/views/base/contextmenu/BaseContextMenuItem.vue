@@ -11,6 +11,7 @@
             onClick(e) {
                 e.preventDefault()
                 this.$emit('click', e);
+                if (this.$parent) this.$parent.$emit('hide')
             }
         }
     }

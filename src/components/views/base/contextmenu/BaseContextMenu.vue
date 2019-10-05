@@ -47,15 +47,16 @@
         },
         mounted() {
             this.$parent.$el.addEventListener('contextmenu', this.onContextMenu);
-            document.addEventListener('click', this.hideOnOtherClickEvent);
-            document.addEventListener('oncontextmenu', this.hideOnOtherClickEvent);
-
+            document.addEventListener('mousedown', this.hideOnOtherClickEvent);
+            this.$on('hide', this.hide)
         },
 
         unmount() {
             if (this.$parent.$el) {
                 this.$parent.$el.removeEventListener('contextmenu', this.onContextMenu);
             }
+            document.removeEventListener('mousedown', this.hideOnOtherClickEvent);
+            this.$off('hide', this.hide)
         }
     }
 </script>
