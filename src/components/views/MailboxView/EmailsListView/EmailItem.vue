@@ -6,6 +6,9 @@
         draggable="true"
         @dragover.prevent
         @dragstart="onDragStart">
+        <BaseContextMenu>
+            <BaseContextMenuItem @click="handleClick">Message context menu</BaseContextMenuItem>
+        </BaseContextMenu>
         <span v-show="item.from && item.from.length > 0">From:
             <em v-for="(item, index) of item.from" :key="index">{{item.name || item.address}}</em>
         </span><br>
@@ -14,7 +17,7 @@
 </template>
 <script>
     import {createDragImage} from "@/helpers/dnd";
-
+    import BaseContextMenu from "@/components/views/base/contextmenu"
 
     export default {
         props: {
@@ -23,6 +26,9 @@
             }
         },
         name: 'emails-item-view',
+        components: {
+            ...BaseContextMenu
+        },
         data() {
             return {active: false}
         },
@@ -32,6 +38,9 @@
             }
         },
         methods: {
+            handleClick(e) {
+                alert('context menu item clicked');
+            },
             onClick() {
                 this.$router.push({
                     name: this.$router.currentRoute.name,

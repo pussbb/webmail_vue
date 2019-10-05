@@ -1,7 +1,6 @@
 <template>
     <div class="dropdown-menu dropdown-menu-sm show" v-show="showContextMenu"
          :style="{top:contextMenuTop+'px', left:contextMenuLeft+'px'}">
-
         <slot></slot>
     </div>
 </template>
@@ -33,6 +32,14 @@
             },
             onContextMenu(e) {
                 e.preventDefault();
+
+                if (!this.$slots.default && !this.items) {
+                    return false;
+                }
+                if ( this.$slots.default.length <= 0 && this.items.length <= 0) {
+                    return false;
+                }
+
                 this.hideOnOtherClickEvent(e);
                 this.contextMenuTop = e.layerY;
                 this.contextMenuLeft = e.layerX;

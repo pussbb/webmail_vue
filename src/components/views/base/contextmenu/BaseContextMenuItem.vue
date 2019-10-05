@@ -9,7 +9,8 @@
         name: "BaseContextMenuItem",
         methods: {
             onClick(e) {
-                e.preventDefault()
+                e.preventDefault();
+                e.stopImmediatePropagation();
                 this.$emit('click', e);
                 if (this.$parent) this.$parent.$emit('hide')
             }

@@ -9,7 +9,7 @@
         :id="'folder-tree-item-'+item.directRef"
         class="unselectable">
         <BaseContextMenu>
-            <BaseContextMenuItem @click="handleClick">dddd</BaseContextMenuItem>
+            <BaseContextMenuItem @click="handleClick">Folder context menu</BaseContextMenuItem>
         </BaseContextMenu>
         <router-link
                 :class="{ active: currentFolderDref === item.directRef, border: canDrop}"
