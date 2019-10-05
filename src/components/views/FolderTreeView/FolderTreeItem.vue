@@ -8,6 +8,9 @@
         @drop="onDrop"
         :id="'folder-tree-item-'+item.directRef"
         class="unselectable">
+        <BaseContextMenu>
+            <BaseContextMenuItem @click="handleClick">dddd</BaseContextMenuItem>
+        </BaseContextMenu>
         <router-link
                 :class="{ active: currentFolderDref === item.directRef, border: canDrop}"
                 :id="'folder-tree-item-name-'+item.directRef"
@@ -33,6 +36,7 @@
     import {mapGetters} from 'vuex'
     import {createDragImage} from "@/helpers/dnd";
     import {routerName} from "./utils"
+    import BaseContextMenu from "../base/contextmenu"
 
     export default {
         props: {
@@ -41,10 +45,14 @@
             }
         },
         name: 'FolderTreeItem',
+        components: {
+            ...BaseContextMenu
+        },
         data() {
             return {
                 canDrop: false,
                 dragged: false,
+
             }
         },
         computed: {
@@ -62,6 +70,9 @@
             }
         },
         methods: {
+            handleClick(e) {
+                alert('context menu item clicked');
+            },
             onDrop(e) {
                 this.canDrop = false
                 e.preventDefault();

@@ -13431,4 +13431,9 @@ ul {
   pointer-events: none;
   list-style-type: none; }
 
+nav.navbar {
+  background-image: url("./logo.png");
+  background-repeat: no-repeat;
+  background-position: center 0px; }
+
 /*# sourceMappingURL=app.css.map */

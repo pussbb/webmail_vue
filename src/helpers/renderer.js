@@ -329,6 +329,7 @@ async function fixIframeForm(doc) {
         form.setAttribute('rel', 'noopener noreferrer');
     });
 }
+
 export function initIframeRules(iframe) {
     const doc = iframe.contentWindow.document;
     Promise.all([
